@@ -21,6 +21,8 @@ return new class extends Migration {
 
         // sleep_logs table migration
         Schema::create('sleep_logs', function (Blueprint $table) {
+            // baby id
+            $table->foreignId('baby_id')->constrained();
             $table->id();
             $table->dateTime('started_at');
             $table->dateTime('ended_at')->nullable();
@@ -28,8 +30,9 @@ return new class extends Migration {
         });
 
 // breastfeed_logs table migration
-        Schema::create('breastfeed_logs', function (Blueprint $table) {
+        Schema::create('breast_feed_logs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('baby_id')->constrained();
             $table->dateTime('started_at');
             $table->dateTime('ended_at')->nullable();
             $table->enum('side', ['left', 'right']);
@@ -39,6 +42,7 @@ return new class extends Migration {
 // diaper_change_logs table migration
         Schema::create('diaper_change_logs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('baby_id')->constrained();
             $table->enum('type', ['pee', 'poop', 'both', 'empty']);
             $table->dateTime('started_at');
             $table->timestamps();

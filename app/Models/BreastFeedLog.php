@@ -2,27 +2,19 @@
 
 namespace App\Models;
 
-use App\Contracts\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BreastFeedLog extends Model implements Loggable
+class BreastFeedLog extends Model
 {
-
     use HasFactory;
 
-    public function add(array $data)
-    {
-        // Implement add functionality
-    }
+    // fillable started_at
+    protected $fillable = ['started_at', 'side'];
 
-    public function updateLog(array $data)
+    // belongs to baby
+    public function baby(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        // Implement update functionality
-    }
-
-    public function deleteLog()
-    {
-        // Implement delete functionality
+        return $this->belongsTo(Baby::class);
     }
 }

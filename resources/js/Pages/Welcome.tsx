@@ -1,18 +1,26 @@
 import { PageProps } from "@/types";
 import { Head } from "@inertiajs/react";
-import { Button } from "@/Components/ui/button";
+import { SidebarProvider, SidebarTrigger } from "@/Components/ui/sidebar";
+import { AppSidebar } from "@/Components/AppSidebar";
+import { Home, Inbox, Settings } from "lucide-react";
 
-export default function Welcome({
-    auth,
-    laravelVersion,
-    phpVersion,
-}: PageProps<{ laravelVersion: string; phpVersion: string }>) {
+export default function Welcome({ ...props }: PageProps<any>) {
+    console.log(props);
     return (
-        <div className={'bg-blue-500 min-h-screen'}>
-        <div className={"max-w-screen-lg mx-auto p-10"}>
-            <Head title="Villogs" />
-            <Button>VIllogs</Button>
-        </div>
-        </div>
+        <SidebarProvider>
+            <AppSidebar
+                items={props.babies.map((b: any) => ({
+                    title: b.name,
+                    url: `/babies/${b.id}`,
+                    icon: Home,
+                }))}
+            />
+            <main>
+                <SidebarTrigger />
+                <Head title="Villogs" />
+
+                content
+            </main>
+        </SidebarProvider>
     );
 }
