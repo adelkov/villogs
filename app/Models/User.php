@@ -33,6 +33,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    // has many babies
+    public function babies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Baby::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
