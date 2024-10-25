@@ -101,7 +101,7 @@ function ShowBaby(props: any) {
             <div className={"max-w-screen-sm mx-auto p-2 md:p-10 space-y-2.5"}>
                 <h1 className={"text-6xl"}>{props.baby.name}</h1>
                 <h2 className={"text-4xl"}>
-                    Baby is {props.baby.isSleeping ? "Sleeping" : "Awake"}
+                    Baby is {props.isSleeping ? "Sleeping" : "Awake"}
                 </h2>
                 <div className={"gap-2 grid md:rid-cols-2"}>
                     {!props.isSleeping ? (
