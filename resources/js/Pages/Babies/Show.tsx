@@ -66,7 +66,7 @@ function ShowBaby(props: any) {
         post(
             route("babies.logs.add.diaperchange", {
                 baby: props.baby,
-                type: "pee",
+                type: dischargeType,
             }),
             {
                 onSuccess: () => {
