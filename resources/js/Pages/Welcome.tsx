@@ -17,6 +17,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
 
 export default function Welcome({ ...props }: PageProps<any>) {
 
@@ -68,21 +70,22 @@ export default function Welcome({ ...props }: PageProps<any>) {
                 <SidebarTrigger />
                 <Head title="Villogs" />
 
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="name">Name:</label>
-                    <input id="name" value={values.name} onChange={handleChange}/>
-                    <label htmlFor="date_of_birth">Date of birth:</label>
+
+                <form onSubmit={handleSubmit} className={'space-y-2.5 p-4 '}>
+                    <h1 className="text-2xl font-semibold">Add your baby!</h1>
+                    <Input placeholder={'Baby name'} id="name" value={values.name} onChange={handleChange}/>
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
                                 variant={"outline"}
                                 className={cn(
-                                    "w-[280px] justify-start text-left font-normal",
+                                    "text-left font-normal w-full",
                                     !values.date_of_birth && "text-muted-foreground"
                                 )}
                             >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {values.date_of_birth ? format(values.date_of_birth, "PPP") : <span>Pick a date</span>}
+                                <CalendarIcon className="mr-2 h-4 w-4"/>
+                                {values.date_of_birth ? format(values.date_of_birth, "PPP") :
+                                    <span>Date of birth</span>}
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
@@ -90,15 +93,15 @@ export default function Welcome({ ...props }: PageProps<any>) {
                                 mode="single"
                                 selected={values.date_of_birth}
                                 onSelect={(date) => {
-                                    setValues((values) => ({ ...values, date_of_birth: date }))
+                                    setValues((values) => ({...values, date_of_birth: date}))
                                 }}
                                 initialFocus
                             />
                         </PopoverContent>
                     </Popover>
-                    <button type="submit">Submit</button>
-                </form>
 
+                    <Button type="submit" className={'w-full'}>Submit</Button>
+                </form>
             </main>
         </SidebarProvider>
     );

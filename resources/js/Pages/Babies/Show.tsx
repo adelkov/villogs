@@ -1,4 +1,4 @@
-import { useForm } from "@inertiajs/react";
+import {Head, useForm} from "@inertiajs/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +11,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import * as React from "react";
 
 function ShowBaby(props: any) {
     console.log(props);
@@ -98,8 +99,12 @@ function ShowBaby(props: any) {
 
     return (
         <div className={" bg-blue-300 min-h-screen text-slate-800"}>
+            <Head title="Villogs" />
             <div className={"max-w-screen-sm mx-auto p-2 md:p-10 space-y-2.5"}>
-                <h1 className={"text-6xl"}>{props.baby.name}</h1>
+                <h1 className={"text-6xl font-bold"}>{props.baby.name}</h1>
+                <h2 className={"text-1xl"}>
+                    Born on {format(new Date(props.baby.date_of_birth), "E, d MMMM yyyy")}
+                </h2>
                 <h2 className={"text-4xl"}>
                     Baby is {props.isSleeping ? "Sleeping" : "Awake"}
                 </h2>
