@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/babies/{baby}', function (
         \App\Models\Baby $baby
     ) {
-
+        $baby->load(['sleepLogs', 'breastFeedLogs', 'diaperChangeLogs']); // Ensure all logs are loaded
         $latestBreastFeed = $baby->breastFeedLogs->where('ended_at', null)->first();
 
         return Inertia::render('Babies/Show', [
