@@ -1,12 +1,13 @@
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
-    SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
-    SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
-} from "@/components/ui/sidebar"
-
-
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+} from "@/components/ui/sidebar";
 
 export type Props = {
     items: {
@@ -16,13 +17,12 @@ export type Props = {
     }[];
 };
 
-
 export function AppSidebar({ items }: Props) {
     return (
         <Sidebar>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    <SidebarGroupLabel>Villogs</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (
@@ -40,5 +40,5 @@ export function AppSidebar({ items }: Props) {
                 </SidebarGroup>
             </SidebarContent>
         </Sidebar>
-    )
+    );
 }

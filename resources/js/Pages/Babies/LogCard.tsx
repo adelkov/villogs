@@ -42,9 +42,9 @@ function LogCard({ log, baby }: Props) {
     };
 
     const details: Record<string, string> = {
-        breastfeed: `Breastfed on ${log.side}`,
-        diaperchange: `Diaper was full of ${log.type}`,
-        sleep: "Sleep",
+        breastfeed: `- on the ${log.side}`,
+        diaperchange: `- full of ${log.type}`,
+        sleep: "",
     };
 
     function displayLogTime(log: any) {
@@ -56,7 +56,7 @@ function LogCard({ log, baby }: Props) {
         const minutes = duration.minutes?.toString().padStart(2, "0") || "00";
         const seconds = duration.seconds?.toString().padStart(2, "0") || "00";
 
-        return `${format(startedAt, "E. HH:mm")} -> ${hours}:${minutes}:${seconds}`;
+        return `${format(startedAt, "E. HH:mm")}, ${hours}:${minutes}:${seconds}`;
     }
 
     useInterval(
@@ -66,24 +66,37 @@ function LogCard({ log, baby }: Props) {
         !log.ended_at ? 1000 : null,
     );
 
-
     const timingByVariant: Record<string, string> = {
         breastfeed: timing,
         diaperchange: `${format(new Date(log.started_at), "E. HH:mm")}`,
-        sleep: timing
-    }
+        sleep: timing,
+    };
+
+    const isRunning =
+        ["breastfeed", "sleep"].includes(log.variant) && !log.ended_at;
 
     return (
         <div
             className={
-                "border bg-gradient-to-br from-white/20 to-white/60 flex items-center gap-2.5 shadow-2xl p-3 rounded-md"
+                "border bg-gradient-to-br from-white/20 to-white/60 flex items-center gap-4 shadow-2xl p-3 rounded-md"
             }
         >
             {icon[log.variant]}
             <div>
-                <h2 className={"font-bold text2xl"}>{label[log.variant]}</h2>
-                <p>{timingByVariant[log.variant]}</p>
-                <p>{details[log.variant]}</p>
+                <h2 className={"font-bold text-md flex items-center gap-2"}>
+                    {isRunning && (
+                        <div
+                            className={
+                                "bg-slate-800 size-2 animate-pulse rounded-full"
+                            }
+                        />
+                    )}
+                    {label[log.variant]}
+                    <span className={"opacity-70 text-sm"}>
+                        {details[log.variant]}
+                    </span>
+                </h2>
+                <p className={"text-sm"}>{timingByVariant[log.variant]}</p>
             </div>
 
             <Button

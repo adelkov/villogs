@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+
+    $user = auth()->user();
+    if ($user->babies()->exists()) {
+        return redirect()->route('babies.show', $user->babies()->first());
+    }
+
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -53,7 +60,6 @@ Route::middleware('auth')->group(function () {
             'status' => $baby->status(),
             // all the logs merged into one field, add type to all and sort by started_at
             'logs' => array_merge($breastFeedsStartedAtToday, $sleepLogsStartedAtToday, $diaperChangeLogsStartedAtToday),
-
         ]);
     })->name('babies.show');
 
