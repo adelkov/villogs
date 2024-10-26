@@ -13,6 +13,11 @@ class Baby extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'date_of_birth',
+    ];
+
     protected static function booted()
     {
         static::addGlobalScope(new IncludeLogs);

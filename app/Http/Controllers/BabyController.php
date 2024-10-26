@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Baby;
 use App\Models\BreastFeedLog;
 use App\Models\DiaperChangeLog;
 use App\Models\SleepLog;
@@ -11,6 +12,23 @@ use Inertia\Inertia;
 
 class BabyController extends Controller
 {
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+        $baby = new Baby([
+            'name' => $request['name'],
+            'date_of_birth' => $request['date_of_birth']
+        ]);
+
+        auth()->user()->babies()->save($baby);
+
+        // redirect to babies/:id
+        return redirect()->route('babies.show', ['baby' => $baby->id]);
+    }
+
     public function show(\App\Models\Baby $user)
     {
         return Inertia::render('Baby/Show', [
