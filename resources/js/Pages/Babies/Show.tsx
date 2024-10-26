@@ -85,7 +85,11 @@ function ShowBaby(props: any) {
                 </AnimatePresence>
 
                 {props.logs.map((log: any) => (
-                    <LogCard log={log} baby={props.baby} />
+                    <LogCard
+                        key={log.id + log.variant}
+                        log={log}
+                        baby={props.baby}
+                    />
                 ))}
             </div>
         </div>
