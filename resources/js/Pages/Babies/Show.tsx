@@ -1,16 +1,6 @@
 import { Head, useForm } from "@inertiajs/react";
 import * as React from "react";
-import { Button } from "@/components/ui/button";
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { differenceInDays, differenceInWeeks, format } from "date-fns";
+import { differenceInDays, differenceInWeeks } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import BreastFeedTrack from "@/Pages/Babies/BreastFeedTrack";
 import DiaperChangeTrack from "@/Pages/Babies/DiaperChangeTrack";
@@ -45,7 +35,10 @@ function ShowBaby(props: any) {
             <div className={"max-w-screen-sm mx-auto p-2 md:p-10 space-y-2.5"}>
                 <h1 className={"text-6xl font-bold"}>
                     {props.baby.name}
-                    <span className={"font-bold italic text-xl"}> is{" "}{props.status}</span>
+                    <span className={"font-bold italic text-xl"}>
+                        {" "}
+                        is {props.status}
+                    </span>
                 </h1>
                 <div className={"text-1xl space-x-1"}>
                     <Badge variant="secondary">
@@ -94,7 +87,6 @@ function ShowBaby(props: any) {
                 {props.logs.map((log: any) => (
                     <LogCard log={log} baby={props.baby} />
                 ))}
-
             </div>
         </div>
     );

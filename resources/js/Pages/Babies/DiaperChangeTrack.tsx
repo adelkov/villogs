@@ -34,7 +34,7 @@ function DiaperChangeTrack({ baby }: Props) {
             <DropdownMenuTrigger asChild>
                 <TrackActionButton>
                     <Shirt />
-                    Change diaper
+                    Diaper
                 </TrackActionButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent>

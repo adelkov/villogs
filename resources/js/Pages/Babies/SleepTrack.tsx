@@ -39,7 +39,7 @@ function SleepTrack({ baby, status }: Props) {
                     onClick={startSleep}
                 >
                     <Bed className={'h-8 w-8'} />
-                    <span>Start sleep</span>
+                    <span>Sleep</span>
                 </TrackActionButton>
             ) : (
                 <TrackActionButton
