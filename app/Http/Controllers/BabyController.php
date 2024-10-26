@@ -39,7 +39,7 @@ class BabyController extends Controller
     public function addSleepLog(\App\Models\Log $log, \App\Models\Baby $baby)
     {
         $sleepLog = new SleepLog([
-            'started_at' => now()->toIso8601String(),
+            'started_at' => now()->toISOString(),
         ]);
         $baby->sleepLogs()->save($sleepLog);
 
@@ -52,7 +52,7 @@ class BabyController extends Controller
         $sleepLogs = $baby->sleepLogs()->whereNull('ended_at')->get();
 
         foreach ($sleepLogs as $sleepLog) {
-            $sleepLog->ended_at = now()->toIso8601String();
+            $sleepLog->ended_at = now()->toISOString();
             $sleepLog->save();
         }
 
@@ -62,7 +62,7 @@ class BabyController extends Controller
     public function addBreastFeedLog(Request $request, \App\Models\Baby $baby)
     {
         $breastFeedLog = new BreastFeedLog([
-            'started_at' => now()->toIso8601String(),
+            'started_at' => now()->toISOString(),
             'side' => $request->side,
         ]);
 
@@ -73,9 +73,8 @@ class BabyController extends Controller
 
     public function addDiaperChangeLog(Request $request, \App\Models\Baby $baby)
     {
-
         $diaperChangeLog = new DiaperChangeLog([
-            'started_at' => now()->toIso8601String(),
+            'started_at' => now()->toISOString(),
             'type' => $request->type,
         ]);
 
