@@ -69,7 +69,11 @@ function ShowBaby(props: any) {
                     </div>
                 </AnimatePresence>
 
-                {props.logs.map((log: any) => (
+                {props.logs.slice().sort(
+                    (a: any, b: any) =>
+                        new Date(b.started_at).getTime() -
+                        new Date(a.started_at).getTime(),
+                ).map((log: any) => (
                     <LogCard
                         key={log.id + log.variant}
                         log={log}

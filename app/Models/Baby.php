@@ -13,6 +13,10 @@ class Baby extends Model
 {
     use HasFactory;
 
+    public BreastFeedLog $breastFeedLogs;
+    public DiaperChangeLog $diaperChangeLogs;
+    public SleepLog $sleepLogs;
+
     protected $fillable = [
         'name',
         'date_of_birth',

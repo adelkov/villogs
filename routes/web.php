@@ -27,30 +27,32 @@ Route::middleware('auth')->group(function () {
     Route::get('/babies/{baby}', function (
         \App\Models\Baby $baby
     ) {
-        $baby->load(['sleepLogs', 'breastFeedLogs', 'diaperChangeLogs']); // Ensure all logs are loaded
-        $latestBreastFeed = $baby->breastFeedLogs->where('ended_at', null)->first();
+
+        // add variant for each type of log
+        $breastFeedsStartedAtToday = $baby->breastFeedLogs()->whereDate('started_at', now()->startOfDay())->get() // add type to all
+        ->map(function ($log) {
+            $log->variant = 'breastfeed';
+            return $log;
+        })->toArray();
+
+        $sleepLogsStartedAtToday = $baby->sleepLogs()->whereDate('started_at', now()->startOfDay())->get()
+            ->map(function ($log) {
+                $log->variant = 'sleep';
+                return $log;
+            })->toArray();
+
+        $diaperChangeLogsStartedAtToday = $baby->diaperChangeLogs()->whereDate('started_at', now()->startOfDay())->get()
+            ->map(function ($log) {
+                $log->variant = 'diaperchange';
+                return $log;
+            })->toArray();
+
 
         return Inertia::render('Babies/Show', [
             'baby' => $baby,
             'status' => $baby->status(),
-            'lastBreastFeedSide' => $latestBreastFeed ? $latestBreastFeed->side : null,
             // all the logs merged into one field, add type to all and sort by started_at
-            'logs' => $baby->sleepLogs->map(function ($log) {
-                $log->variant = 'sleep';
-                return $log;
-            })->merge(
-                $baby->breastFeedLogs->map(function ($log) {
-                    $log->variant = 'breastfeed';
-                    return $log;
-                })
-            )->merge(
-                $baby->diaperChangeLogs->map(function ($log) {
-                    $log->variant = 'diaperchange';
-                    return $log;
-                })
-                //sort by started_at from latesr to oldest
-            )->sortByDesc('started_at')
-                ->values(),
+            'logs' => array_merge($breastFeedsStartedAtToday, $sleepLogsStartedAtToday, $diaperChangeLogsStartedAtToday),
 
         ]);
     })->name('babies.show');
