@@ -40,6 +40,7 @@ function DiaperChangeTrack({ baby }: Props) {
             <DropdownMenuContent>
                 {["pee", "poop", "both", "empty"].map((type) => (
                     <DropdownMenuItem
+                        key={type}
                         className={"capitalize"}
                         onClick={(e) => addDiaperChange(e, type)}
                     >

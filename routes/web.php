@@ -27,9 +27,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/babies/{baby}', function (
         \App\Models\Baby $baby
     ) {
+
+        $latestBreastFeed = $baby->breastFeedLogs->where('ended_at', null)->first();
+
         return Inertia::render('Babies/Show', [
             'baby' => $baby,
             'status' => $baby->status(),
+            'lastBreastFeedSide' => $latestBreastFeed ? $latestBreastFeed->side : null,
             // all the logs merged into one field, add type to all and sort by started_at
             'logs' => $baby->sleepLogs->map(function ($log) {
                 $log->variant = 'sleep';

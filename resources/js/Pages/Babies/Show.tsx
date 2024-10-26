@@ -10,22 +10,7 @@ import { cn } from "@/lib/utils";
 import LogCard from "@/Pages/Babies/LogCard";
 
 function ShowBaby(props: any) {
-    const { reset, delete: deleteItem } = useForm({
-        message: "",
-    });
-
-    const deleteLog = (e: any, id: string, type: string) => {
-        e.preventDefault();
-        deleteItem(
-            route("babies.logs.delete", {
-                baby: props.baby,
-                id,
-                type,
-            }),
-            { onSuccess: () => reset() },
-        );
-    };
-
+    console.log(props)
     const showBreastFeed = ["awake", "breastfeeding"].includes(props.status);
     const showSleeping = ["awake", "sleeping"].includes(props.status);
 
