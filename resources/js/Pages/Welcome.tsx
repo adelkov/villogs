@@ -36,7 +36,7 @@ export default function Welcome({ ...props }: PageProps<any>) {
         message: "",
     });
 
-    function handleChange(e) {
+    function handleChange(e: any) {
         const key = e.target.id;
         const value = e.target.value
         setValues(values => ({
@@ -45,7 +45,7 @@ export default function Welcome({ ...props }: PageProps<any>) {
         }))
     }
 
-    function handleSubmit(e) {
+    function handleSubmit(e: any) {
         e.preventDefault()
         post(
             route("babies.store", {
