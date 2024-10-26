@@ -1,24 +1,21 @@
-import { Button } from "@/components/ui/button";
 import * as React from "react";
-import { useState } from "react";
 import { useForm } from "@inertiajs/react";
-
+import TrackActionButton from "@/Pages/Babies/TrackActionButton";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Shirt } from "lucide-react";
 
 type Props = {
-    baby: any
-}
+    baby: any;
+};
 
 function DiaperChangeTrack({ baby }: Props) {
-    const [dischargeType, setDischargeType] = useState<string>();
-    const {
-        post,
-        reset,
-        delete: deleteItem,
-    } = useForm({
-        message: "",
-    });
-    const addDiaperChange = (e: any) => {
-        e.preventDefault();
+    const { post, reset } = useForm();
+    const addDiaperChange = (e: any, dischargeType: string) => {
         post(
             route("babies.logs.add.diaperchange", {
                 baby: baby,
@@ -26,63 +23,31 @@ function DiaperChangeTrack({ baby }: Props) {
             }),
             {
                 onSuccess: () => {
-                    setDischargeType("");
                     reset();
                 },
             },
         );
     };
 
-    const selectDischargeType = () => {
-        setDischargeType("select");
-    };
     return (
-        <>
-            {!dischargeType && (
-                <Button onClick={selectDischargeType}>Add diaper change</Button>
-            )}
-            {dischargeType === "select" && (
-                <div>
-                    <Button
-                        variant={"ghost"}
-                        onClick={(e: any) => {
-                            setDischargeType("pee");
-                        }}
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <TrackActionButton>
+                    <Shirt />
+                    Change diaper
+                </TrackActionButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+                {["pee", "poop", "both", "empty"].map((type) => (
+                    <DropdownMenuItem
+                        className={"capitalize"}
+                        onClick={(e) => addDiaperChange(e, type)}
                     >
-                        Pee
-                    </Button>
-                    <Button
-                        variant={"ghost"}
-                        onClick={(e: any) => {
-                            setDischargeType("poo");
-                        }}
-                    >
-                        Poo
-                    </Button>
-                    <Button
-                        variant={"ghost"}
-                        onClick={(e: any) => {
-                            setDischargeType("both");
-                        }}
-                    >
-                        Both
-                    </Button>
-                    <Button
-                        variant={"ghost"}
-                        onClick={(e: any) => {
-                            setDischargeType("empty");
-                        }}
-                    >
-                        Empty
-                    </Button>
-                </div>
-            )}
-            {dischargeType && dischargeType !== "select" && (
-                <Button variant={"secondary"} onClick={addDiaperChange}>
-                    Add {dischargeType}, diaper change
-                </Button>
-            )}
-        </>
+                        {type}
+                    </DropdownMenuItem>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }
 

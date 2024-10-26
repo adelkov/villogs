@@ -1,7 +1,17 @@
-import { Button } from "@/components/ui/button";
 import * as React from "react";
 import { useState } from "react";
 import { useForm } from "@inertiajs/react";
+import TrackActionButton from "@/Pages/Babies/TrackActionButton";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { Milk, MilkOff } from "lucide-react";
 
 type Props = {
     baby: any;
@@ -9,7 +19,11 @@ type Props = {
 };
 
 function BreastFeedTrack({ baby, status }: Props) {
-    const { post, reset, delete: endLog } = useForm({
+    const {
+        post,
+        reset,
+        delete: endLog,
+    } = useForm({
         message: "",
     });
     const [breastSide, setBreastSide] = useState<string>();
@@ -33,12 +47,12 @@ function BreastFeedTrack({ baby, status }: Props) {
         );
     };
 
-    const addBreastFeed = (e: any) => {
+    const addBreastFeed = (e: any, side: string) => {
         e.preventDefault();
         post(
             route("babies.logs.add.breastfeed", {
                 baby: baby,
-                side: breastSide,
+                side,
             }),
             {
                 onSuccess: () => {
@@ -51,46 +65,36 @@ function BreastFeedTrack({ baby, status }: Props) {
     return (
         <>
             {status !== "breastfeeding" ? (
-                <>
-                    {!breastSide && (
-                        <Button onClick={onSettingBreastSide}>
-                            Add breastfeed
-                        </Button>
-                    )}
-                    {breastSide === "select" && (
-                        <div>
-                            <Button
-                                variant={"ghost"}
-                                onClick={(e: any) => {
-                                    setBreastSide("left");
-                                }}
-                            >
-                                Left
-                            </Button>
-                            <Button
-                                variant={"ghost"}
-                                onClick={(e: any) => {
-                                    setBreastSide("right");
-                                }}
-                            >
-                                Right
-                            </Button>
-                        </div>
-                    )}
-                    {breastSide && breastSide !== "select" && (
-                        <Button variant={"secondary"} onClick={addBreastFeed}>
-                            Add {breastSide} breastfeed
-                        </Button>
-                    )}
-                </>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <TrackActionButton>
+                            <Milk className={"h-8 w-8"} />
+                            Breastfeed
+                        </TrackActionButton>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuLabel>Which breast?</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            onClick={(e) => addBreastFeed(e, "right")}
+                        >
+                            Right
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={(e) => addBreastFeed(e, "left")}
+                        >
+                            Left
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             ) : (
-                <Button
-                    variant={"secondary"}
+                <TrackActionButton
                     className={"animate-pulse"}
                     onClick={endBreastFeeding}
                 >
+                    <MilkOff className={"h-8 w-8"} />
                     End breastfeeding
-                </Button>
+                </TrackActionButton>
             )}
         </>
     );
