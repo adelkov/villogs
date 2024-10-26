@@ -76,7 +76,7 @@ function LogCard({ log, baby }: Props) {
     return (
         <div
             className={
-                "border bg-gradient-to-br from-white/30 to-white/60 flex items-center gap-2.5 shadow-2xl p-3 rounded-md"
+                "border bg-gradient-to-br from-white/20 to-white/60 flex items-center gap-2.5 shadow-2xl p-3 rounded-md"
             }
         >
             {icon[log.variant]}
