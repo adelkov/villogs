@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
     ) {
         return Inertia::render('Babies/Show', [
             'baby' => $baby,
-            'isSleeping' => $baby->isSleeping(),
+            'status' => $baby->status(),
             // all the logs merged into one field, add type to all and sort by started_at
             'logs' => $baby->sleepLogs->map(function ($log) {
                 $log->variant = 'sleep';
@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/babies/{baby}/logs/sleep/start', [\App\Http\Controllers\BabyController::class, 'addSleepLog'])->name('babies.logs.add.sleep.start');
     Route::post('/babies/{baby}/logs/sleep/end', [\App\Http\Controllers\BabyController::class, 'stopSleepLog'])->name('babies.logs.add.sleep.end');
     Route::post('/babies/{baby}/logs/breastfeed', [\App\Http\Controllers\BabyController::class, 'addBreastFeedLog'])->name('babies.logs.add.breastfeed');
+    Route::delete('/babies/{baby}/logs/breastfeed', [\App\Http\Controllers\BabyController::class, 'endBreastFeed'])->name('babies.logs.add.breastfeed.end');
     Route::post('/babies/{baby}/logs/diaperchange', [\App\Http\Controllers\BabyController::class, 'addDiaperChangeLog'])->name('babies.logs.add.diaperchange');
     Route::delete('/babies/{baby}/logs', [\App\Http\Controllers\BabyController::class, 'deleteLog'])->name('babies.logs.delete');
 });

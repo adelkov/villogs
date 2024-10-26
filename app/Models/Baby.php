@@ -42,9 +42,17 @@ class Baby extends Model
     }
 
     // isSleeping boolean field, if has a sleep log that is not ended
-    public function isSleeping(): bool
+    public function status(): string
     {
-        return $this->sleepLogs()->whereNull('ended_at')->exists();
+        $isSleeping = $this->sleepLogs()->whereNull('ended_at')->exists();
+        $isBreastFeeding = $this->breastFeedLogs()->whereNull('ended_at')->exists();
+        if ($isSleeping) {
+            return 'sleeping';
+        }
+        if ($isBreastFeeding) {
+            return 'breastfeeding';
+        }
+        return 'awake';
     }
 
     // belongs to many users

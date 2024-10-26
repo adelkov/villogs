@@ -71,6 +71,19 @@ class BabyController extends Controller
         return redirect()->back()->with('success', 'Log added successfully.');
     }
 
+    public function endBreastFeed(\App\Models\Baby $baby)
+    {
+        // breastfeed logs that don't have end date
+        $breastFeedLogs = $baby->breastFeedLogs()->whereNull('ended_at')->get();
+
+        foreach ($breastFeedLogs as $breastFeedLog) {
+            $breastFeedLog->ended_at = now()->toISOString();
+            $breastFeedLog->save();
+        }
+
+        return redirect()->back()->with('success', 'Log(s) closed successfully.');
+    }
+
     public function addDiaperChangeLog(Request $request, \App\Models\Baby $baby)
     {
         $diaperChangeLog = new DiaperChangeLog([

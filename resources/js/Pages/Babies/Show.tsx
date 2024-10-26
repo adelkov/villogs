@@ -1,5 +1,5 @@
-import {Head, useForm} from "@inertiajs/react";
-import { useState } from "react";
+import { Head, useForm } from "@inertiajs/react";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
     Table,
@@ -10,13 +10,12 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { format } from "date-fns";
-import * as React from "react";
+import { differenceInDays, differenceInWeeks, format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import BreastFeedTrack from "@/Pages/Babies/BreastFeedTrack";
+import DiaperChangeTrack from "@/Pages/Babies/DiaperChangeTrack";
 
 function ShowBaby(props: any) {
-    console.log(props);
-    const [breastSide, setBreastSide] = useState<string>();
-    const [dischargeType, setDischargeType] = useState<string>();
     const {
         post,
         reset,
@@ -24,6 +23,7 @@ function ShowBaby(props: any) {
     } = useForm({
         message: "",
     });
+    console.log(props);
 
     const startSleep = (e: any) => {
         e.preventDefault();
@@ -45,38 +45,6 @@ function ShowBaby(props: any) {
         );
     };
 
-    const addBreastFeed = (e: any) => {
-        e.preventDefault();
-        post(
-            route("babies.logs.add.breastfeed", {
-                baby: props.baby,
-                side: breastSide,
-            }),
-            {
-                onSuccess: () => {
-                    setBreastSide("");
-                    reset();
-                },
-            },
-        );
-    };
-
-    const addDiaperChange = (e: any) => {
-        e.preventDefault();
-        post(
-            route("babies.logs.add.diaperchange", {
-                baby: props.baby,
-                type: dischargeType,
-            }),
-            {
-                onSuccess: () => {
-                    setDischargeType("");
-                    reset();
-                },
-            },
-        );
-    };
-
     const deleteLog = (e: any, id: string, type: string) => {
         e.preventDefault();
         deleteItem(
@@ -89,115 +57,65 @@ function ShowBaby(props: any) {
         );
     };
 
-    const onSettingBreastSide = () => {
-        setBreastSide("select");
-    };
-
-    const selectDischargeType = () => {
-        setDischargeType("select");
-    };
+    const isSleeping = props.status === "sleeping";
+    const showBreastFeed = ["awake", "breastfeeding"].includes(props.status);
+    const showSleeping = ["awake", "sleeping"].includes(props.status);
 
     return (
         <div className={" bg-blue-300 min-h-screen text-slate-800"}>
             <Head title="Villogs" />
             <div className={"max-w-screen-sm mx-auto p-2 md:p-10 space-y-2.5"}>
                 <h1 className={"text-6xl font-bold"}>{props.baby.name}</h1>
-                <h2 className={"text-1xl"}>
-                    Born on {format(new Date(props.baby.date_of_birth), "E, d MMMM yyyy")}
-                </h2>
-                <h2 className={"text-4xl"}>
-                    Baby is {props.isSleeping ? "Sleeping" : "Awake"}
-                </h2>
+                <div className={"text-1xl space-x-1"}>
+                    <Badge variant="secondary">
+                        {differenceInDays(
+                            new Date(),
+                            new Date(props.baby.date_of_birth),
+                        )}{" "}
+                        days
+                    </Badge>
+
+                    <Badge variant="default">
+                        {differenceInWeeks(
+                            new Date(),
+                            new Date(props.baby.date_of_birth),
+                        )}{" "}
+                        weeks
+                    </Badge>
+                </div>
+
+                <h2 className={"text-4xl"}>Baby is {props.status}</h2>
                 <div className={"gap-2 grid md:rid-cols-2"}>
-                    {!props.isSleeping ? (
-                        <Button
-                            disabled={props.isSleeping}
-                            onClick={startSleep}
-                        >
-                            Start sleep
-                        </Button>
-                    ) : (
-                        <Button
-                            className={'animate-pulse'}
-                            disabled={!props.isSleeping} onClick={endSleep}>
-                            End sleep
-                        </Button>
+                    {showSleeping && (
+                        <>
+                            {!isSleeping ? (
+                                <Button
+                                    disabled={isSleeping}
+                                    onClick={startSleep}
+                                >
+                                    Start sleep
+                                </Button>
+                            ) : (
+                                <Button
+                                    className={"animate-pulse"}
+                                    disabled={!isSleeping}
+                                    onClick={endSleep}
+                                >
+                                    End sleep
+                                </Button>
+                            )}
+                        </>
                     )}
-                    {!breastSide && (
-                        <Button onClick={onSettingBreastSide}>
-                            Add breastfeed
-                        </Button>
+
+                    {showBreastFeed && (
+                        <BreastFeedTrack
+                            status={props.status}
+                            baby={props.baby}
+                        />
                     )}
-                    {breastSide === "select" && (
-                        <div>
-                            <Button
-                                variant={'ghost'}
-                                onClick={(e: any) => {
-                                    setBreastSide("left");
-                                }}
-                            >
-                                Left
-                            </Button>
-                            <Button
-                                variant={'ghost'}
-                                onClick={(e: any) => {
-                                    setBreastSide("right");
-                                }}
-                            >
-                                Right
-                            </Button>
-                        </div>
-                    )}
-                    {breastSide && breastSide !== "select" && (
-                        <Button variant={'secondary'} onClick={addBreastFeed}>
-                            Add {breastSide} breastfeed
-                        </Button>
-                    )}
-                    {!dischargeType && (
-                        <Button onClick={selectDischargeType}>
-                            Add diaper change
-                        </Button>
-                    )}
-                    {dischargeType === "select" && (
-                        <div>
-                            <Button
-                                variant={'ghost'}
-                                onClick={(e: any) => {
-                                    setDischargeType("pee");
-                                }}
-                            >
-                                Pee
-                            </Button>
-                            <Button
-                                variant={'ghost'}
-                                onClick={(e: any) => {
-                                    setDischargeType("poo");
-                                }}
-                            >
-                                Poo
-                            </Button>
-                            <Button
-                                variant={'ghost'}
-                                onClick={(e: any) => {
-                                    setDischargeType("both");
-                                }}
-                            >
-                                Both
-                            </Button>
-                            <Button
-                                variant={'ghost'}
-                                onClick={(e: any) => {
-                                    setDischargeType("empty");
-                                }}
-                            >
-                                Empty
-                            </Button>
-                        </div>
-                    )}
-                    {dischargeType && dischargeType !== "select" && (
-                        <Button variant={'secondary'} onClick={addDiaperChange}>
-                            Add {dischargeType}, diaper change
-                        </Button>
+
+                    {props.status === "awake" && (
+                        <DiaperChangeTrack baby={props.baby} />
                     )}
                 </div>
 
@@ -224,16 +142,20 @@ function ShowBaby(props: any) {
                                         "E. HH:mm",
                                     )}
                                 </TableCell>
-                                <TableCell>{log.ended_at ? format(
-                                    new Date(log.ended_at ?? ""),
-                                    " HH:mm",
-                                    ): ''}</TableCell>
+                                <TableCell>
+                                    {log.ended_at
+                                        ? format(
+                                              new Date(log.ended_at ?? ""),
+                                              " HH:mm",
+                                          )
+                                        : ""}
+                                </TableCell>
                                 <TableCell className="text-right">
                                     {log.side || log.type}
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <Button
-                                        variant={'destructive'}
+                                        variant={"destructive"}
                                         onClick={(e: any) =>
                                             deleteLog(e, log.id, log.variant)
                                         }
