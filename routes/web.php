@@ -34,27 +34,37 @@ Route::middleware('auth')->group(function () {
     Route::get('/babies/{baby}/sleeping', function (
         \App\Models\Baby $baby
     ) {
+        
+        $sleepLogs = \App\Models\SleepLog::where('baby_id', $baby->id)
+            ->orderByDesc('started_at')
+            ->get();
         return Inertia::render('Babies/Sleep', [
             'baby' => $baby,
-            'logs' => $baby->sleepLogs()->get(),
+            'logs' => $sleepLogs,
         ]);
     })->name('babies.sleep');
     // breastfeeding
     Route::get('/babies/{baby}/breastfeeding', function (
         \App\Models\Baby $baby
     ) {
+        $breastFeedLogs = \App\Models\BreastFeedLog::where('baby_id', $baby->id)
+            ->orderByDesc('started_at')
+            ->get();
         return Inertia::render('Babies/BreastFeed', [
             'baby' => $baby,
-            'logs' => $baby->breastFeedLogs()->get(),
+            'logs' => $breastFeedLogs,
         ]);
     })->name('babies.breastfeed');
     // diaper change
     Route::get('/babies/{baby}/diaperchanges', function (
         \App\Models\Baby $baby
     ) {
+        $diaperChangeLogs = \App\Models\DiaperChangeLog::where('baby_id', $baby->id)
+            ->orderByDesc('started_at')
+            ->get();
         return Inertia::render('Babies/DiaperChange', [
             'baby' => $baby,
-            'logs' => $baby->diaperChangeLogs()->get(),
+            'logs' => $diaperChangeLogs,
         ]);
     })->name('babies.diaperchanges');
 
