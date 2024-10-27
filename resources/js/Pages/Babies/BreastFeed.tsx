@@ -6,7 +6,7 @@ import LogCard from "@/Pages/Babies/LogCard";
 
 function BreastFeed(props: any) {
     return (
-        <div className={"flex flex-col gap-2 max-w-screen-sm mx-auto p-10"}>
+        <div className={"flex flex-col gap-2 max-w-screen-sm mx-auto p-2"}>
             <h1 className={'text-4xl mb-3'}>
                 Breastfeed Logs
             </h1>

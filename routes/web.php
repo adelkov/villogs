@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/babies/{baby}/sleeping', function (
         \App\Models\Baby $baby
     ) {
-        
+
         $sleepLogs = \App\Models\SleepLog::where('baby_id', $baby->id)
             ->orderByDesc('started_at')
             ->get();
@@ -72,17 +72,25 @@ Route::middleware('auth')->group(function () {
         \App\Models\Baby $baby
     ) {
         // add variant for each type of log
-        $breastFeedsStartedAtToday = $baby->breastFeedLogs()->whereDate('started_at', now()->startOfDay())->get() // add type to all
-        ->map(function ($log) {
-            $log->variant = 'breastfeed';
-            return $log;
-        })->toArray();
+        $breastFeedsStartedAtToday = $baby->breastFeedLogs()
+            ->whereDate('started_at', now()->startOfDay())
+            ->orWhereDate('ended_at', now()->startOfDay())
+            ->get()
+            ->map(function ($log) {
+                $log->variant = 'breastfeed';
+                return $log;
+            })
+            ->toArray();
 
-        $sleepLogsStartedAtToday = $baby->sleepLogs()->whereDate('started_at', now()->startOfDay())->get()
+        $sleepLogsStartedAtToday = $baby->sleepLogs()
+            ->whereDate('started_at', now()->startOfDay())
+            ->orWhereDate('ended_at', now()->startOfDay())
+            ->get()
             ->map(function ($log) {
                 $log->variant = 'sleep';
                 return $log;
-            })->toArray();
+            })
+            ->toArray();
 
         $diaperChangeLogsStartedAtToday = $baby->diaperChangeLogs()->whereDate('started_at', now()->startOfDay())->get()
             ->map(function ($log) {
