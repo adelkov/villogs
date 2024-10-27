@@ -4,6 +4,9 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import * as React from "react";
+import {formatToLocalTime} from "@/lib/utils";
+
+
 
 type Props = {
     log: BreastfeedLog;
@@ -26,6 +29,8 @@ function BreastFeedLogEditor({ log, onClose }: Props) {
             },
         );
     };
+
+    console.log(data.ended_at)
 
     return (
         <form
@@ -57,25 +62,23 @@ function BreastFeedLogEditor({ log, onClose }: Props) {
             <input
                 type="datetime-local"
                 placeholder={"Started at"}
-                value={data.started_at.slice(0, 16)}
+                value={data.started_at ? formatToLocalTime(data.started_at) : ""}
                 onChange={(event) => {
                     setData({
                         ...data,
-                        started_at: event.target.value + ":00.000000Z",
+                        started_at: new Date(event.target.value).toISOString(),
                     });
                 }}
             />
             <input
-                min={
-                    data.started_at.slice(0, 16)
-                }
+                min={data.started_at && formatToLocalTime(data.started_at)}
                 type="datetime-local"
                 placeholder={"Started at"}
-                value={data.ended_at?.slice(0, 16)}
+                value={data.ended_at ? formatToLocalTime(data.ended_at) : ""}
                 onChange={(event) => {
                     setData({
                         ...data,
-                        ended_at: event.target.value + ":00.000000Z",
+                        ended_at: new Date(event.target.value).toISOString(),
                     });
                 }}
             />

@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import * as React from "react";
+import {formatToLocalTime} from "@/lib/utils";
 
 type Props = {
     log: DiaperChangeLog;
@@ -57,11 +58,11 @@ function DiaperChangeLogEditor({ log, onClose }: Props) {
             <input
                 type="datetime-local"
                 placeholder={"Started at"}
-                value={data.started_at.slice(0, 16)}
+                value={data.started_at ? formatToLocalTime(data.started_at) : ""}
                 onChange={(event) => {
                     setData({
                         ...data,
-                        started_at: event.target.value + ":00.000000Z",
+                        started_at: new Date(event.target.value).toISOString(),
                     });
                 }}
             />
