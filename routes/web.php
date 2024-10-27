@@ -9,9 +9,9 @@ Route::get('/', function () {
 
     $user = auth()->user();
     if ($user->babies()->exists()) {
-        return redirect()->route('babies.show', $user->babies()->first());
-    }
 
+        return redirect()->route('babies.show', $user->babies()->latest()->first());
+    }
 
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -31,10 +31,36 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/babies/{baby}/sleeping', function (
+        \App\Models\Baby $baby
+    ) {
+        return Inertia::render('Babies/Sleep', [
+            'baby' => $baby,
+            'logs' => $baby->sleepLogs()->get(),
+        ]);
+    })->name('babies.sleep');
+    // breastfeeding
+    Route::get('/babies/{baby}/breastfeeding', function (
+        \App\Models\Baby $baby
+    ) {
+        return Inertia::render('Babies/BreastFeed', [
+            'baby' => $baby,
+            'logs' => $baby->breastFeedLogs()->get(),
+        ]);
+    })->name('babies.breastfeed');
+    // diaper change
+    Route::get('/babies/{baby}/diaperchanges', function (
+        \App\Models\Baby $baby
+    ) {
+        return Inertia::render('Babies/DiaperChange', [
+            'baby' => $baby,
+            'logs' => $baby->diaperChangeLogs()->get(),
+        ]);
+    })->name('babies.diaperchanges');
+
     Route::get('/babies/{baby}', function (
         \App\Models\Baby $baby
     ) {
-
         // add variant for each type of log
         $breastFeedsStartedAtToday = $baby->breastFeedLogs()->whereDate('started_at', now()->startOfDay())->get() // add type to all
         ->map(function ($log) {
