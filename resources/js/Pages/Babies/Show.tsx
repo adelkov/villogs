@@ -28,11 +28,11 @@ function ShowBaby(props: any) {
                 new Date(a.started_at).getTime(),
         );
 
-    const hoursSleptToday = props.logs.reduce((acc: number, log: any) => {
+    const minutesSleptToday = props.logs.reduce((acc: number, log: any) => {
         if (log.variant === "sleep") {
             const startedAt = new Date(log.started_at);
             const endedAt = log.ended_at ? new Date(log.ended_at) : new Date();
-            const duration = differenceInDays(endedAt, startedAt);
+            const duration = differenceInMinutes(endedAt, startedAt);
             acc += duration;
         }
         return acc;
@@ -112,7 +112,8 @@ function ShowBaby(props: any) {
                                 Hours slept today:{" "}
                             </td>
                             <td className={"font-bold text-right"}>
-                                {Math.floor(hoursSleptToday)}
+                                {Math.floor(minutesSleptToday / 60)} hours{" "}
+                                {minutesSleptToday % 60} minutes
                             </td>
                         </tr>
                         <tr>
