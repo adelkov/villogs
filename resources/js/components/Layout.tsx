@@ -1,7 +1,7 @@
 import { AppSidebar } from "@/components/AppSidebar";
 import { Bed, Milk, Shirt, CircleDashed } from "lucide-react";
 import * as React from "react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { Head } from "@inertiajs/react";
 
 type Props = {

@@ -119,15 +119,17 @@ function ShowBaby(props: any) {
                             <td className={"text-slate-600"}>
                                 Last breast feed:
                             </td>
-                            <td className={"font-bold text-right"}>
-                                {" "}
-                                {lastBreastFeed?.side} side (
-                                {format(
-                                    new Date(lastBreastFeed?.started_at),
-                                    "HH:mm",
-                                )}
-                                )
-                            </td>
+                            {lastBreastFeed &&
+                                <td className={"font-bold text-right"}>
+                                    {" "}
+                                    {lastBreastFeed?.side} side (
+                                    {format(
+                                        new Date(lastBreastFeed?.started_at),
+                                        "HH:mm",
+                                    )}
+                                    )
+                                </td>
+                            }
                         </tr>
                         <tr>
                             <td className={"text-slate-600"}>
