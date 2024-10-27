@@ -69,6 +69,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/babies/{baby}/logs/breastfeed', [\App\Http\Controllers\BabyController::class, 'endBreastFeed'])->name('babies.logs.add.breastfeed.end');
     Route::post('/babies/{baby}/logs/diaperchange', [\App\Http\Controllers\BabyController::class, 'addDiaperChangeLog'])->name('babies.logs.add.diaperchange');
     Route::delete('/babies/{baby}/logs', [\App\Http\Controllers\BabyController::class, 'deleteLog'])->name('babies.logs.delete');
+
+    Route::resource('breastFeedLogs', \App\Http\Controllers\BreastFeedLogController::class);
+    Route::resource('diaperChangeLogs', \App\Http\Controllers\DiaperChangeLogController::class);
+    Route::resource('sleepLogs', \App\Http\Controllers\SleepLogController::class);
+
 });
 
 require __DIR__ . '/auth.php';

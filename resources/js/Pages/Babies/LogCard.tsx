@@ -1,12 +1,29 @@
 import { useForm } from "@inertiajs/react";
 import { Bed, Delete, Milk, Shirt } from "lucide-react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { format, intervalToDuration } from "date-fns";
 import { useInterval } from "usehooks-ts";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import Log, {
+    isBreastfeedLog,
+    isDiaperChangeLog,
+    isLongRunningLog,
+    isSleepLog,
+} from "@/types/Log";
+import BreastFeedLogEditor from "@/Pages/Babies/BreastFeedLogEditor";
+import SleepLogEditor from "@/Pages/Babies/SleepLogEditor";
+import DiaperChangeLogEditor from "@/Pages/Babies/DiaperChangeLogEditor";
 
 type Props = {
-    log: any;
+    log: Log;
     baby: any;
 };
 
@@ -23,13 +40,18 @@ const label: Record<string, string> = {
 };
 
 function LogCard({ log, baby }: Props) {
+    const [isOpen, setIsOpen] = useState(false);
     const [timing, setTiming] = useState(displayLogTime(log));
+
+    useEffect(() => {
+        setTiming(displayLogTime(log));
+    }, [log]);
 
     const { reset, delete: deleteItem } = useForm({
         message: "",
     });
 
-    const deleteLog = (e: any, id: string, type: string) => {
+    const deleteLog = (e: any, id: number, type: string) => {
         e.preventDefault();
         deleteItem(
             route("babies.logs.delete", {
@@ -42,8 +64,8 @@ function LogCard({ log, baby }: Props) {
     };
 
     const details: Record<string, string> = {
-        breastfeed: `- on the ${log.side}`,
-        diaperchange: `- full of ${log.type}`,
+        breastfeed: isBreastfeedLog(log) ? `- on the ${log.side}` : "",
+        diaperchange: isDiaperChangeLog(log) ? `- full of ${log.type}` : "",
         sleep: "",
     };
 
@@ -63,7 +85,7 @@ function LogCard({ log, baby }: Props) {
         () => {
             setTiming(displayLogTime(log));
         },
-        !log.ended_at ? 1000 : null,
+        isLongRunningLog(log) && !log.ended_at ? 1000 : null,
     );
 
     const timingByVariant: Record<string, string> = {
@@ -72,42 +94,89 @@ function LogCard({ log, baby }: Props) {
         sleep: timing,
     };
 
-    const isRunning =
-        ["breastfeed", "sleep"].includes(log.variant) && !log.ended_at;
+    const isRunning = isLongRunningLog(log) && !log.ended_at;
 
     return (
-        <div
-            className={
-                "border bg-gradient-to-br from-white/20 to-white/60 flex items-center gap-4 shadow-2xl p-3 rounded-md"
-            }
+        <Dialog
+            open={isOpen}
+            onOpenChange={(isOpen) => {
+                setIsOpen(isOpen);
+            }}
         >
-            {icon[log.variant]}
-            <div>
-                <h2 className={"font-bold text-md flex items-center gap-2"}>
-                    {isRunning && (
-                        <div
+            <DialogTrigger asChild>
+                <div
+                    className={
+                        "border bg-gradient-to-br from-white/20 to-white/60 flex items-center gap-4 shadow-2xl p-3 rounded-md"
+                    }
+                >
+                    {icon[log.variant]}
+                    <div>
+                        <h2
                             className={
-                                "bg-slate-800 size-2 animate-pulse rounded-full"
+                                "font-bold text-md flex items-center gap-2"
                             }
+                        >
+                            {isRunning && (
+                                <div
+                                    className={
+                                        "bg-slate-800 size-2 animate-pulse rounded-full"
+                                    }
+                                />
+                            )}
+                            {label[log.variant]}
+                            <span className={"opacity-70 text-sm"}>
+                                {details[log.variant]}
+                            </span>
+                        </h2>
+                        <p className={"text-sm"}>
+                            {timingByVariant[log.variant]}
+                        </p>
+                    </div>
+
+                    <Button
+                        variant={"ghost"}
+                        size={"icon"}
+                        onClick={(e) => deleteLog(e, log.id, log.variant)}
+                        className={"ml-auto"}
+                    >
+                        <Delete />
+                    </Button>
+                </div>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Edit {log.variant} log</DialogTitle>
+                    {isBreastfeedLog(log) && (
+                        <BreastFeedLogEditor
+                            onClose={() => {
+                                reset();
+                                setIsOpen(false);
+                            }}
+                            log={log}
                         />
                     )}
-                    {label[log.variant]}
-                    <span className={"opacity-70 text-sm"}>
-                        {details[log.variant]}
-                    </span>
-                </h2>
-                <p className={"text-sm"}>{timingByVariant[log.variant]}</p>
-            </div>
+                    {isSleepLog(log) && (
+                        <SleepLogEditor
+                            onClose={() => {
+                                reset();
+                                setIsOpen(false);
+                            }}
+                            log={log}
+                        />
+                    )}
 
-            <Button
-                variant={"ghost"}
-                size={"icon"}
-                onClick={(e) => deleteLog(e, log.id, log.variant)}
-                className={"ml-auto"}
-            >
-                <Delete />
-            </Button>
-        </div>
+                    {isDiaperChangeLog(log) && (
+                        <DiaperChangeLogEditor
+                            log={log}
+                            onClose={() => {
+                                reset();
+                                setIsOpen(false);
+                            }}
+                        />
+                    )}
+                </DialogHeader>
+            </DialogContent>
+        </Dialog>
     );
 }
 

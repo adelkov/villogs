@@ -10,7 +10,7 @@ class SleepLog extends Model
     use HasFactory;
 
     // fillable started_at
-    protected $fillable = ['started_at'];
+    protected $fillable = ['started_at', 'ended_at'];
 
     // belongs to baby
     public function baby(): \Illuminate\Database\Eloquent\Relations\BelongsTo

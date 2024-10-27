@@ -1,0 +1,76 @@
+import { BreastfeedLog, DiaperChangeLog } from "@/types/Log";
+import { useForm } from "@inertiajs/react";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
+import * as React from "react";
+
+type Props = {
+    log: DiaperChangeLog;
+    onClose: () => void;
+};
+
+function DiaperChangeLogEditor({ log, onClose }: Props) {
+    const { put, setData, data, processing } = useForm(log);
+
+    const onSubmitBreastFeedLog = (e: any) => {
+        e.preventDefault();
+        put(
+            route("diaperChangeLogs.update", {
+                diaperChangeLog: log,
+            }),
+            {
+                onSuccess: () => {
+                    onClose();
+                },
+            },
+        );
+    };
+
+    return (
+        <form
+            className={"space-y-2.5 flex flex-col"}
+            onSubmit={(e) => {
+                e.preventDefault();
+                onSubmitBreastFeedLog(e);
+            }}
+        >
+            <RadioGroup
+                onValueChange={(e) => {
+                    setData({
+                        ...data,
+                        type: e as any,
+                    });
+                }}
+                defaultValue={data?.type}
+            >
+                {["pee", "poop", "both", "empty"].map((type) => (
+                    <div className="flex items-center space-x-2" key={type}>
+                        <RadioGroupItem value={type} id={type} />
+                        <Label htmlFor={type} className={"capitalize"}>
+                            {type}
+                        </Label>
+                    </div>
+                ))}
+            </RadioGroup>
+
+            <input
+                type="datetime-local"
+                placeholder={"Started at"}
+                value={data.started_at.slice(0, 16)}
+                onChange={(event) => {
+                    setData({
+                        ...data,
+                        started_at: event.target.value + ":00.000000Z",
+                    });
+                }}
+            />
+
+            <Button disabled={processing} type="submit">
+                Save
+            </Button>
+        </form>
+    );
+}
+
+export default DiaperChangeLogEditor;

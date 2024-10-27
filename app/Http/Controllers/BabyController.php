@@ -12,7 +12,6 @@ use Inertia\Inertia;
 
 class BabyController extends Controller
 {
-
     public function store(Request $request)
     {
         $request->validate([
