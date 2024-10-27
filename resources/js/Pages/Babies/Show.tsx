@@ -4,7 +4,8 @@ import {
     differenceInDays,
     differenceInMinutes,
     differenceInWeeks,
-    format,
+    max, min, startOfDay, endOfDay,
+    format, startOfToday, endOfToday, parseISO,
 } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import BreastFeedTrack from "@/Pages/Babies/BreastFeedTrack";
@@ -14,6 +15,7 @@ import { AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import LogCard from "@/Pages/Babies/LogCard";
 import Layout from "@/components/Layout";
+
 
 function ShowBaby(props: any) {
     console.log(props);
@@ -28,12 +30,12 @@ function ShowBaby(props: any) {
                 new Date(a.started_at).getTime(),
         );
 
+
     const minutesSleptToday = props.logs.reduce((acc: number, log: any) => {
         if (log.variant === "sleep") {
-            const startedAt = new Date(log.started_at);
-            const endedAt = log.ended_at ? new Date(log.ended_at) : new Date();
-            const duration = differenceInMinutes(endedAt, startedAt);
-            acc += duration;
+            const start = max([startOfToday(), new Date(log.started_at)]);
+            const end = min([new Date(), new Date(log.ended_at)]);
+            acc += differenceInMinutes(end, start);
         }
         return acc;
     }, 0);
