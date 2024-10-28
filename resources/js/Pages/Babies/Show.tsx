@@ -1,23 +1,24 @@
 import { Head } from "@inertiajs/react";
 import * as React from "react";
-import {
-    differenceInDays,
-    differenceInMinutes,
-    differenceInWeeks,
-    max, min, startOfDay, endOfDay,
-    format, startOfToday, endOfToday, parseISO,
-} from "date-fns";
+import { differenceInDays, differenceInWeeks, format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import BreastFeedTrack from "@/Pages/Babies/BreastFeedTrack";
 import DiaperChangeTrack from "@/Pages/Babies/DiaperChangeTrack";
 import SleepTrack from "@/Pages/Babies/SleepTrack";
 import { AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn, getMinutesSlept } from "@/lib/utils";
 import LogCard from "@/Pages/Babies/LogCard";
 import Layout from "@/components/Layout";
+import Log, { isBreastfeedLog } from "@/types/Log";
+import Baby from "@/types/Baby";
 
+type Props = {
+    baby: Baby;
+    status: string;
+    logs: Log[];
+};
 
-function ShowBaby(props: any) {
+function ShowBaby(props: Props) {
     console.log(props);
     const showBreastFeed = ["awake", "breastfeeding"].includes(props.status);
     const showSleeping = ["awake", "sleeping"].includes(props.status);
@@ -30,19 +31,11 @@ function ShowBaby(props: any) {
                 new Date(a.started_at).getTime(),
         );
 
-
-    const minutesSleptToday = props.logs.reduce((acc: number, log: any) => {
-        if (log.variant === "sleep") {
-            const start = max([startOfToday(), new Date(log.started_at)]);
-            const end = min([new Date(), new Date(log.ended_at)]);
-            acc += differenceInMinutes(end, start);
-        }
-        return acc;
-    }, 0);
-
-    const lastBreastFeed = sortedLogs.find(
-        (log: any) => log.variant === "breastfeed",
+    const minutesSlept = getMinutesSlept(
+        props.logs.filter((l) => l.variant === "sleep"),
     );
+
+    const lastBreastFeed = sortedLogs.find(isBreastfeedLog);
 
     return (
         <div className={" bg-blue-300 min-h-screen text-slate-800"}>
@@ -55,6 +48,8 @@ function ShowBaby(props: any) {
                 />
                 <link rel="icon" type="image/svg+xml" href="/favicon.png" />
             </Head>
+
+
 
             <div className={"max-w-screen-sm mx-auto p-2 md:p-10 space-y-2.5"}>
                 <h1 className={"text-6xl font-bold"}>
@@ -114,15 +109,15 @@ function ShowBaby(props: any) {
                                 Hours slept today:{" "}
                             </td>
                             <td className={"font-bold text-right"}>
-                                {Math.floor(minutesSleptToday / 60)} hours{" "}
-                                {minutesSleptToday % 60} minutes
+                                {Math.floor(minutesSlept / 60)} hours{" "}
+                                {minutesSlept % 60} minutes
                             </td>
                         </tr>
                         <tr>
                             <td className={"text-slate-600"}>
                                 Last breast feed:
                             </td>
-                            {lastBreastFeed &&
+                            {lastBreastFeed && (
                                 <td className={"font-bold text-right"}>
                                     {" "}
                                     {lastBreastFeed?.side} side (
@@ -132,7 +127,7 @@ function ShowBaby(props: any) {
                                     )}
                                     )
                                 </td>
-                            }
+                            )}
                         </tr>
                         <tr>
                             <td className={"text-slate-600"}>

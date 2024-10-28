@@ -1,10 +1,10 @@
 import Layout from "@/components/Layout";
 import * as React from "react";
-import Sleep from "@/Pages/Babies/Sleep";
-import {BreastfeedLog, DiaperChangeLog} from "@/types/Log";
+import {BreastfeedLog} from "@/types/Log";
 import LogCard from "@/Pages/Babies/LogCard";
+import Baby from "@/types/Baby";
 
-function BreastFeed(props: any) {
+function BreastFeed(props: { logs: BreastfeedLog[], baby: Baby }) {
     return (
         <div className={"flex flex-col gap-2 max-w-screen-sm mx-auto p-2"}>
             <h1 className={'text-4xl mb-3'}>

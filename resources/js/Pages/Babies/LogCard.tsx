@@ -2,12 +2,11 @@ import { useForm } from "@inertiajs/react";
 import { Bed, Delete, Milk, Shirt } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { format, intervalToDuration } from "date-fns";
+import { format } from "date-fns";
 import { useInterval } from "usehooks-ts";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -21,10 +20,12 @@ import Log, {
 import BreastFeedLogEditor from "@/Pages/Babies/BreastFeedLogEditor";
 import SleepLogEditor from "@/Pages/Babies/SleepLogEditor";
 import DiaperChangeLogEditor from "@/Pages/Babies/DiaperChangeLogEditor";
+import { displayLogTime } from "@/lib/utils";
+import Baby from "@/types/Baby";
 
 type Props = {
     log: Log;
-    baby: any;
+    baby: Baby;
 };
 
 const icon: Record<string, ReactNode> = {
@@ -68,18 +69,6 @@ function LogCard({ log, baby }: Props) {
         diaperchange: isDiaperChangeLog(log) ? `- full of ${log.type}` : "",
         sleep: "",
     };
-
-    function displayLogTime(log: any) {
-        const startedAt = new Date(log.started_at);
-        const endedAt = log.ended_at ? new Date(log.ended_at) : new Date();
-
-        const duration = intervalToDuration({ start: startedAt, end: endedAt });
-        const hours = duration.hours?.toString().padStart(2, "0") || "00";
-        const minutes = duration.minutes?.toString().padStart(2, "0") || "00";
-        const seconds = duration.seconds?.toString().padStart(2, "0") || "00";
-
-        return `${format(startedAt, "E. HH:mm")}, ${hours}:${minutes}:${seconds}`;
-    }
 
     useInterval(
         () => {

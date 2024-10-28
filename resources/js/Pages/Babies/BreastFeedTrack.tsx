@@ -1,6 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import TrackActionButton from "@/Pages/Babies/TrackActionButton";
 import {
     DropdownMenu,
@@ -12,6 +11,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Milk, MilkOff } from "lucide-react";
+import Log, { isBreastfeedLog, isSleepLog } from "@/types/Log";
+import { useState } from "react";
+import { displayLongRunningLogDuration } from "@/lib/utils";
+import { useInterval } from "usehooks-ts";
 
 type Props = {
     baby: any;
@@ -19,6 +22,23 @@ type Props = {
 };
 
 function BreastFeedTrack({ baby, status }: Props) {
+    const { props } = usePage<any>();
+
+    const runningBreastFeedLog = props.logs.find(
+        (log: Log) => isBreastfeedLog(log) && !log.ended_at,
+    );
+    const [duration, setDuration] = useState<string>(
+        runningBreastFeedLog
+            ? displayLongRunningLogDuration(runningBreastFeedLog)
+            : "",
+    );
+
+    useInterval(
+        () => {
+            setDuration(displayLongRunningLogDuration(runningBreastFeedLog));
+        },
+        runningBreastFeedLog ? 1000 : null,
+    );
     const {
         post,
         reset,
@@ -26,11 +46,6 @@ function BreastFeedTrack({ baby, status }: Props) {
     } = useForm({
         message: "",
     });
-    const [breastSide, setBreastSide] = useState<string>();
-
-    const onSettingBreastSide = () => {
-        setBreastSide("select");
-    };
 
     const endBreastFeeding = (e: any) => {
         e.preventDefault();
@@ -40,7 +55,6 @@ function BreastFeedTrack({ baby, status }: Props) {
             }),
             {
                 onSuccess: () => {
-                    setBreastSide("");
                     reset();
                 },
             },
@@ -56,7 +70,6 @@ function BreastFeedTrack({ baby, status }: Props) {
             }),
             {
                 onSuccess: () => {
-                    setBreastSide("");
                     reset();
                 },
             },
@@ -88,12 +101,9 @@ function BreastFeedTrack({ baby, status }: Props) {
                     </DropdownMenuContent>
                 </DropdownMenu>
             ) : (
-                <TrackActionButton
-                    className={"animate-pulse"}
-                    onClick={endBreastFeeding}
-                >
-                    <MilkOff className={"h-8 w-8"} />
-                    End breastfeeding
+                <TrackActionButton onClick={endBreastFeeding}>
+                    <MilkOff className={"animate-pulse h-8 w-8"} />
+                    <span className={"animate-pulse"}>{duration || displayLongRunningLogDuration(runningBreastFeedLog)}</span>
                 </TrackActionButton>
             )}
         </>

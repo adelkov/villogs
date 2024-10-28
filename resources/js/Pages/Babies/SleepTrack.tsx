@@ -1,14 +1,35 @@
 import * as React from "react";
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import TrackActionButton from "@/Pages/Babies/TrackActionButton";
-import { Bed, PersonStanding } from 'lucide-react'
+import { Bed, PersonStanding, AlarmClock } from "lucide-react";
+import Baby from "@/types/Baby";
+import Log, { isSleepLog } from "@/types/Log";
+import { displayLongRunningLogDuration } from "@/lib/utils";
+import { useState } from "react";
+import { useInterval } from "usehooks-ts";
 
 type Props = {
-    baby: any;
+    baby: Baby;
     status: string;
 };
 
 function SleepTrack({ baby, status }: Props) {
+    const { props } = usePage<any>();
+
+    const runningSleepLog = props.logs.find(
+        (log: Log) => isSleepLog(log) && !log.ended_at,
+    );
+    const [duration, setDuration] = useState<string>(
+        runningSleepLog ? displayLongRunningLogDuration(runningSleepLog) : "",
+    );
+
+    useInterval(
+        () => {
+            setDuration(displayLongRunningLogDuration(runningSleepLog));
+        },
+        runningSleepLog ? 1000 : null,
+    );
+
     const { post, reset } = useForm({
         message: "",
     });
@@ -34,21 +55,18 @@ function SleepTrack({ baby, status }: Props) {
     return (
         <>
             {!isSleeping ? (
-                <TrackActionButton
-                    disabled={isSleeping}
-                    onClick={startSleep}
-                >
-                    <Bed className={'h-8 w-8'} />
+                <TrackActionButton disabled={isSleeping} onClick={startSleep}>
+                    <Bed className={"h-8 w-8"} />
                     <span>Sleep</span>
                 </TrackActionButton>
             ) : (
-                <TrackActionButton
-                    className={"animate-pulse"}
-                    disabled={!isSleeping}
-                    onClick={endSleep}
-                >
-                    <PersonStanding className={'h-8 w-8'} />
-                    <span>End sleep</span>
+                <TrackActionButton disabled={!isSleeping} onClick={endSleep}>
+                    <AlarmClock className={"h-8 w-8 animate-pulse"} />
+                    <span className={"animate-pulse"}>
+                        {duration ||
+                            displayLongRunningLogDuration(runningSleepLog) ||
+                            "00:00:00"}
+                    </span>
                 </TrackActionButton>
             )}
         </>
