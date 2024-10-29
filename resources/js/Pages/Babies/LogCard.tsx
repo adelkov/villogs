@@ -29,15 +29,15 @@ type Props = {
 };
 
 const icon: Record<string, ReactNode> = {
-    breastfeed: <Milk />,
-    diaperchange: <Shirt />,
-    sleep: <Bed />,
+    "App\\Models\\BreastFeedLog": <Milk />,
+    'App\\Models\\DiaperChangeLog': <Shirt />,
+    "App\\Models\\SleepLog": <Bed />,
 };
 
 const label: Record<string, string> = {
-    breastfeed: "Breastfeed",
-    diaperchange: "Diaper change",
-    sleep: "Sleep",
+    "App\\Models\\BreastFeedLog": "Breastfeed",
+    'App\\Models\\DiaperChangeLog': "Diaper change",
+    "App\\Models\\SleepLog": "Sleep",
 };
 
 function LogCard({ log, baby }: Props) {
@@ -52,38 +52,37 @@ function LogCard({ log, baby }: Props) {
         message: "",
     });
 
-    const deleteLog = (e: any, id: number, type: string) => {
+    const deleteLog = (e: any, id: number) => {
         e.preventDefault();
         deleteItem(
             route("babies.logs.delete", {
                 baby: baby,
                 id,
-                type,
             }),
             { onSuccess: () => reset() },
         );
     };
 
     const details: Record<string, string> = {
-        breastfeed: isBreastfeedLog(log) ? `- on the ${log.side}` : "",
-        diaperchange: isDiaperChangeLog(log) ? `- full of ${log.type}` : "",
-        sleep: "",
+        "App\\Models\\BreastFeedLog": isBreastfeedLog(log) ? `- on the ${log.loggable.side}` : "",
+        'App\\Models\\DiaperChangeLog': isDiaperChangeLog(log) ? `- full of ${log.loggable.type}` : "",
+        "App\\Models\\SleepLog": "",
     };
 
     useInterval(
         () => {
             setTiming(displayLogTime(log));
         },
-        isLongRunningLog(log) && !log.ended_at ? 1000 : null,
+        isLongRunningLog(log) && !log.loggable.ended_at ? 1000 : null,
     );
 
     const timingByVariant: Record<string, string> = {
-        breastfeed: timing,
-        diaperchange: `${format(new Date(log.started_at), "E. HH:mm")}`,
-        sleep: timing,
+        "App\\Models\\BreastFeedLog": timing,
+        'App\\Models\\DiaperChangeLog': `${format(new Date(log.loggable.started_at), "E. HH:mm")}`,
+        "App\\Models\\SleepLog": timing,
     };
 
-    const isRunning = isLongRunningLog(log) && !log.ended_at;
+    const isRunning = isLongRunningLog(log) && !log.loggable.ended_at;
 
     return (
         <Dialog
@@ -98,7 +97,7 @@ function LogCard({ log, baby }: Props) {
                         "border bg-gradient-to-br from-white/20 to-white/60 flex items-center gap-4 shadow-2xl p-3 rounded-md"
                     }
                 >
-                    {icon[log.variant]}
+                    {icon[log.loggable_type]}
                     <div>
                         <h2
                             className={
@@ -112,20 +111,20 @@ function LogCard({ log, baby }: Props) {
                                     }
                                 />
                             )}
-                            {label[log.variant]}
+                            {label[log.loggable_type]}
                             <span className={"opacity-70 text-sm"}>
-                                {details[log.variant]}
+                                {details[log.loggable_type]}
                             </span>
                         </h2>
                         <p className={"text-sm"}>
-                            {timingByVariant[log.variant]}
+                            {timingByVariant[log.loggable_type]}
                         </p>
                     </div>
 
                     <Button
                         variant={"ghost"}
                         size={"icon"}
-                        onClick={(e) => deleteLog(e, log.id, log.variant)}
+                        onClick={(e) => deleteLog(e, log.id)}
                         className={"ml-auto"}
                     >
                         <Delete />
@@ -134,7 +133,7 @@ function LogCard({ log, baby }: Props) {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Edit {log.variant} log</DialogTitle>
+                    <DialogTitle>Edit {log.loggable_type} log</DialogTitle>
                     {isBreastfeedLog(log) && (
                         <BreastFeedLogEditor
                             onClose={() => {

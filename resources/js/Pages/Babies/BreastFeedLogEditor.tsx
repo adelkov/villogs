@@ -4,9 +4,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import * as React from "react";
-import {formatToLocalTime} from "@/lib/utils";
-
-
+import { formatToLocalTime } from "@/lib/utils";
 
 type Props = {
     log: BreastfeedLog;
@@ -14,13 +12,13 @@ type Props = {
 };
 
 function BreastFeedLogEditor({ log, onClose }: Props) {
-    const { put, setData, data, processing } = useForm(log);
+    const { put, setData, data, processing } = useForm(log.loggable);
 
     const onSubmitBreastFeedLog = (e: any) => {
         e.preventDefault();
         put(
             route("breastFeedLogs.update", {
-                breastFeedLog: log,
+                breastFeedLog: log.loggable,
             }),
             {
                 onSuccess: () => {
@@ -29,8 +27,6 @@ function BreastFeedLogEditor({ log, onClose }: Props) {
             },
         );
     };
-
-    console.log(data.ended_at)
 
     return (
         <form
@@ -62,7 +58,9 @@ function BreastFeedLogEditor({ log, onClose }: Props) {
             <input
                 type="datetime-local"
                 placeholder={"Started at"}
-                value={data.started_at ? formatToLocalTime(data.started_at) : ""}
+                value={
+                    data.started_at ? formatToLocalTime(data.started_at) : ""
+                }
                 onChange={(event) => {
                     setData({
                         ...data,

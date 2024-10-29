@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Baby;
+use App\Models\SleepLog;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -34,6 +35,13 @@ class DatabaseSeeder extends Seeder
         // Ensure only an array of IDs is passed to attach
         $reka->babies()->attach($babies->pluck('id')->toArray());
         $adel->babies()->attach($babies->pluck('id')->toArray());
+
+
+        SleepLog::factory()->count(10)->create([
+            'baby_id' => $babies->first()->id,
+            'started_at' => now()->subHours(2),
+            'ended_at' => now(),
+        ]);
 
 
     }

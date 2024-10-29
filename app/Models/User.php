@@ -33,6 +33,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function logs()
+    {
+        return $this->hasMany(Log::class);
+    }
+
     // has many babies
     public function babies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

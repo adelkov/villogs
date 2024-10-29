@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Baby;
 use App\Models\BreastFeedLog;
 use App\Models\DiaperChangeLog;
+use App\Models\Log;
 use App\Models\SleepLog;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -37,10 +38,18 @@ class BabyController extends Controller
 
     public function addSleepLog(\App\Models\Log $log, \App\Models\Baby $baby)
     {
-        $sleepLog = new SleepLog([
+        $sleepLog = SleepLog::create([
             'started_at' => now()->toISOString(),
+            'baby_id' => $baby->id,
         ]);
-        $baby->sleepLogs()->save($sleepLog);
+
+        Log::create([
+            'user_id' => auth()->id(),
+            'baby_id' => $baby->id,
+            'loggable_id' => $sleepLog->id,
+            'loggable_type' => 'App\Models\SleepLog',
+        ]);
+
 
         return redirect()->back()->with('success', 'Log added successfully.');
     }
@@ -60,12 +69,18 @@ class BabyController extends Controller
 
     public function addBreastFeedLog(Request $request, \App\Models\Baby $baby)
     {
-        $breastFeedLog = new BreastFeedLog([
+        $breastFeedLog = BreastFeedLog::create([
             'started_at' => now()->toISOString(),
             'side' => $request->side,
+            'baby_id' => $baby->id,
         ]);
 
-        $baby->breastFeedLogs()->save($breastFeedLog);
+        Log::create([
+            'user_id' => auth()->id(),
+            'baby_id' => $baby->id,
+            'loggable_id' => $breastFeedLog->id,
+            'loggable_type' => 'App\Models\BreastFeedLog',
+        ]);
 
         return redirect()->back()->with('success', 'Log added successfully.');
     }
@@ -85,27 +100,29 @@ class BabyController extends Controller
 
     public function addDiaperChangeLog(Request $request, \App\Models\Baby $baby)
     {
-        $diaperChangeLog = new DiaperChangeLog([
+        $diaperChangeLog =  DiaperChangeLog::create([
             'started_at' => now()->toISOString(),
             'type' => $request->type,
+            'baby_id' => $baby->id,
         ]);
 
-        $baby->diaperChangeLogs()->save($diaperChangeLog);
+        Log::create([
+            'user_id' => auth()->id(),
+            'baby_id' => $baby->id,
+            'loggable_id' => $diaperChangeLog->id,
+            'loggable_type' => 'App\Models\DiaperChangeLog',
+        ]);
+
 
         return redirect()->back()->with('success', 'Log added successfully.');
     }
 
     public function deleteLog(Request $request, \App\Models\Baby $baby)
     {
-        $type = $request->type;
-
-        if ($type === 'sleep') {
-            SleepLog::destroy($request->id);
-        } elseif ($type === 'breastfeed') {
-            BreastFeedLog::destroy($request->id);
-        } elseif ($type === 'diaperchange') {
-            DiaperChangeLog::destroy($request->id);
-        }
+        $log = Log::find($request->id);
+        $loggable = $log->loggable_type::find($log->loggable_id);
+        $loggable->delete();
+        $log->delete();
 
         return redirect()->back()->with('success', 'Baby deleted successfully.');
     }

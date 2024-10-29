@@ -10,13 +10,13 @@ type Props = {
 };
 
 function SleepLogEditor({ log, onClose }: Props) {
-    const { put, setData, data, processing } = useForm(log);
+    const { put, setData, data, processing } = useForm(log.loggable);
 
     const onSubmitLog = (e: any) => {
         e.preventDefault();
         put(
             route("sleepLogs.update", {
-                sleepLog: log,
+                sleepLog: log.loggable,
             }),
             {
                 onSuccess: () => {

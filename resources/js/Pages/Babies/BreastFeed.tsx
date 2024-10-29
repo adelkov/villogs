@@ -13,7 +13,7 @@ function BreastFeed(props: { logs: BreastfeedLog[], baby: Baby }) {
             {props.logs.map((log: BreastfeedLog) => (
                 <LogCard
                     key={log.id}
-                    log={{ ...log, variant: "breastfeed" }}
+                    log={log}
                     baby={props.baby}
                 />
             ))}

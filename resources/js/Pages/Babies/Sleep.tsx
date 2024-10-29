@@ -10,7 +10,7 @@ function Sleep(props: any) {
             {props.logs.map((log: SleepLog) => (
                 <LogCard
                     key={log.id}
-                    log={{ ...log, variant: "sleep" }}
+                    log={log}
                     baby={props.baby}
                 />
             ))}

@@ -27,6 +27,11 @@ class Baby extends Model
         static::addGlobalScope(new IncludeLogs);
     }
 
+    public function logs()
+    {
+        return $this->hasMany(Log::class);
+    }
+
     // sleepLogs
     public function sleepLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

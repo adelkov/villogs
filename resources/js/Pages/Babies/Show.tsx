@@ -9,7 +9,7 @@ import { AnimatePresence } from "framer-motion";
 import { cn, getMinutesSlept } from "@/lib/utils";
 import LogCard from "@/Pages/Babies/LogCard";
 import Layout from "@/components/Layout";
-import Log, { isBreastfeedLog } from "@/types/Log";
+import Log, { isBreastfeedLog, isSleepLog } from "@/types/Log";
 import Baby from "@/types/Baby";
 
 type Props = {
@@ -31,9 +31,7 @@ function ShowBaby(props: Props) {
                 new Date(a.started_at).getTime(),
         );
 
-    const minutesSlept = getMinutesSlept(
-        props.logs.filter((l) => l.variant === "sleep"),
-    );
+    const minutesSlept = getMinutesSlept(props.logs.filter(isSleepLog));
 
     const lastBreastFeed = sortedLogs.find(isBreastfeedLog);
 
@@ -48,8 +46,6 @@ function ShowBaby(props: Props) {
                 />
                 <link rel="icon" type="image/svg+xml" href="/favicon.png" />
             </Head>
-
-
 
             <div className={"max-w-screen-sm mx-auto p-2 md:p-10 space-y-2.5"}>
                 <h1 className={"text-6xl font-bold"}>
@@ -120,9 +116,9 @@ function ShowBaby(props: Props) {
                             {lastBreastFeed && (
                                 <td className={"font-bold text-right"}>
                                     {" "}
-                                    {lastBreastFeed?.side} side (
+                                    {lastBreastFeed?.loggable.side} side (
                                     {format(
-                                        new Date(lastBreastFeed?.started_at),
+                                        new Date(lastBreastFeed?.loggable.started_at),
                                         "HH:mm",
                                     )}
                                     )
@@ -148,7 +144,7 @@ function ShowBaby(props: Props) {
 
                 {sortedLogs.map((log: any) => (
                     <LogCard
-                        key={log.id + log.variant}
+                        key={log.id}
                         log={log}
                         baby={props.baby}
                     />

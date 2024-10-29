@@ -1,11 +1,11 @@
 import * as React from "react";
+import { useState } from "react";
 import { useForm, usePage } from "@inertiajs/react";
 import TrackActionButton from "@/Pages/Babies/TrackActionButton";
-import { Bed, PersonStanding, AlarmClock } from "lucide-react";
+import { AlarmClock, Bed } from "lucide-react";
 import Baby from "@/types/Baby";
 import Log, { isSleepLog } from "@/types/Log";
 import { displayLongRunningLogDuration } from "@/lib/utils";
-import { useState } from "react";
 import { useInterval } from "usehooks-ts";
 
 type Props = {
@@ -17,7 +17,7 @@ function SleepTrack({ baby, status }: Props) {
     const { props } = usePage<any>();
 
     const runningSleepLog = props.logs.find(
-        (log: Log) => isSleepLog(log) && !log.ended_at,
+        (log: Log) => isSleepLog(log) && !log.loggable.ended_at,
     );
     const [duration, setDuration] = useState<string>(
         runningSleepLog ? displayLongRunningLogDuration(runningSleepLog) : "",

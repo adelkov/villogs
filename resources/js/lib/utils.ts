@@ -1,12 +1,17 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-import Log, {isLongRunningLog, SleepLog} from "@/types/Log";
-import {differenceInMinutes, format, intervalToDuration, max, startOfToday} from "date-fns";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import Log, { isLongRunningLog, SleepLog } from "@/types/Log";
+import {
+    differenceInMinutes,
+    format,
+    intervalToDuration,
+    max,
+    startOfToday,
+} from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+    return twMerge(clsx(inputs));
 }
-
 
 export function formatToLocalTime(isoDate: string) {
     if (!isoDate) {
@@ -15,7 +20,7 @@ export function formatToLocalTime(isoDate: string) {
     const date = new Date(isoDate);
 
     // Get the local date in YYYY-MM-DDTHH:mm format
-    const localDateString = date.toLocaleString('sv', {
+    const localDateString = date.toLocaleString("sv", {
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         hour12: false,
     });
@@ -23,14 +28,16 @@ export function formatToLocalTime(isoDate: string) {
     return localDateString.slice(0, 16); // Truncate to YYYY-MM-DDTHH:mm
 }
 
-
-
 export function displayLogTime(log: Log) {
+    console.log(log)
+    if (!log) return "";
     if (!isLongRunningLog(log)) {
-        return format(new Date(log.started_at), "E. HH:mm");
+        return format(new Date(log.loggable.started_at), "E. HH:mm");
     }
-    const startedAt = new Date(log.started_at);
-    const endedAt = log.ended_at ? new Date(log.ended_at) : new Date();
+    const startedAt = new Date(log.loggable.started_at);
+    const endedAt = log.loggable.ended_at
+        ? new Date(log.loggable.ended_at)
+        : new Date();
 
     const duration = intervalToDuration({ start: startedAt, end: endedAt });
     const hours = duration.hours?.toString().padStart(2, "0") || "00";
@@ -44,8 +51,10 @@ export function displayLongRunningLogDuration(log: Log) {
     if (!isLongRunningLog(log)) {
         return "";
     }
-    const startedAt = new Date(log.started_at);
-    const endedAt = log.ended_at ? new Date(log.ended_at) : new Date();
+    const startedAt = new Date(log.loggable.started_at);
+    const endedAt = log.loggable.ended_at
+        ? new Date(log.loggable.ended_at)
+        : new Date();
 
     const duration = intervalToDuration({ start: startedAt, end: endedAt });
     const hours = duration.hours?.toString().padStart(2, "0") || "00";
@@ -57,8 +66,10 @@ export function displayLongRunningLogDuration(log: Log) {
 
 export function getMinutesSlept(logs: SleepLog[]) {
     return logs.reduce((acc: number, log: SleepLog) => {
-        const start = max([startOfToday(), new Date(log.started_at)]);
-        const end = log.ended_at ? new Date(log.ended_at) : new Date();
+        const start = max([startOfToday(), new Date(log.loggable.started_at)]);
+        const end = log.loggable.ended_at
+            ? new Date(log.loggable.ended_at)
+            : new Date();
         acc += differenceInMinutes(end, start);
         return acc;
     }, 0);

@@ -10,7 +10,7 @@ function DiaperChange(props: any) {
             {props.logs.map((log: DiaperChangeLog) => (
                 <LogCard
                     key={log.id}
-                    log={{ ...log, variant: "diaperchange" }}
+                    log={log}
                     baby={props.baby}
                 />
             ))}
