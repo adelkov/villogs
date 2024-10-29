@@ -18,7 +18,7 @@ function DiaperChangeLogEditor({ log, onClose }: Props) {
         e.preventDefault();
         put(
             route("diaperChangeLogs.update", {
-                diaperChangeLog: log,
+                diaperChangeLog: log.loggable,
             }),
             {
                 onSuccess: () => {
