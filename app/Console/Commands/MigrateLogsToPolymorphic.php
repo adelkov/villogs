@@ -6,10 +6,21 @@ use App\Models\BreastFeedLog;
 use App\Models\DiaperChangeLog;
 use App\Models\Log;
 use App\Models\SleepLog;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class MigrateLogsToPolymorphic extends Command
 {
+
+    // optional input
+    protected function serializeDate(string $date = null)
+    {
+        // if missing return null
+        if (is_null($date)) {
+            return null;
+        }
+        return Carbon::parse($date)->setTimezone('UTC')->format('Y-m-d H:i:s');
+    }
     /**
      * The name and signature of the console command.
      *
@@ -37,8 +48,8 @@ class MigrateLogsToPolymorphic extends Command
                     'user_id' => 1,
                     'loggable_id' => $breastFeed->id,
                     'loggable_type' => BreastFeedLog::class,
-                    'ended_at' => $breastFeed->ended_at,
-                    'started_at' => $breastFeed->started_at,
+                    'ended_at' => $this->serializeDate($breastFeed->ended_at),
+                    'started_at' => $this->serializeDate($breastFeed->started_at),
                 ]);
             }
         });
@@ -53,7 +64,7 @@ class MigrateLogsToPolymorphic extends Command
                     'user_id' => 1,
                     'loggable_id' => $diaperChange->id,
                     'loggable_type' => DiaperChangeLog::class,
-                    'started_at' => $diaperChange->started_at,
+                    'started_at' => $this->serializeDate($diaperChange->started_at),
                 ]);
             }
         });
@@ -67,8 +78,8 @@ class MigrateLogsToPolymorphic extends Command
                     'user_id' => 1,
                     'loggable_id' => $sleep->id,
                     'loggable_type' => SleepLog::class,
-                    'ended_at' => $sleep->ended_at,
-                    'started_at' => $sleep->started_at,
+                    'ended_at' => $this->serializeDate($sleep->ended_at),
+                    'started_at' => $this->serializeDate($sleep->started_at),
                 ]);
             }
         });
