@@ -73,16 +73,16 @@ function LogCard({ log, baby }: Props) {
         () => {
             setTiming(displayLogTime(log));
         },
-        isLongRunningLog(log) && !log.loggable.ended_at ? 1000 : null,
+        isLongRunningLog(log) && !log.ended_at ? 1000 : null,
     );
 
     const timingByVariant: Record<string, string> = {
         "App\\Models\\BreastFeedLog": timing,
-        'App\\Models\\DiaperChangeLog': `${format(new Date(log.loggable.started_at), "E. HH:mm")}`,
+        'App\\Models\\DiaperChangeLog': `${format(new Date(log.started_at), "E. HH:mm")}`,
         "App\\Models\\SleepLog": timing,
     };
 
-    const isRunning = isLongRunningLog(log) && !log.loggable.ended_at;
+    const isRunning = isLongRunningLog(log) && !log.ended_at;
 
     return (
         <Dialog

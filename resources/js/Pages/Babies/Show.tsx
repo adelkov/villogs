@@ -9,7 +9,11 @@ import { AnimatePresence } from "framer-motion";
 import { cn, getMinutesSlept } from "@/lib/utils";
 import LogCard from "@/Pages/Babies/LogCard";
 import Layout from "@/components/Layout";
-import Log, { isBreastfeedLog, isSleepLog } from "@/types/Log";
+import Log, {
+    isBreastfeedLog,
+    isDiaperChangeLog,
+    isSleepLog,
+} from "@/types/Log";
 import Baby from "@/types/Baby";
 
 type Props = {
@@ -118,7 +122,9 @@ function ShowBaby(props: Props) {
                                     {" "}
                                     {lastBreastFeed?.loggable.side} side (
                                     {format(
-                                        new Date(lastBreastFeed?.loggable.started_at),
+                                        new Date(
+                                            lastBreastFeed?.started_at,
+                                        ),
                                         "HH:mm",
                                     )}
                                     )
@@ -131,23 +137,14 @@ function ShowBaby(props: Props) {
                             </td>
                             <td className={"font-bold text-right"}>
                                 {" "}
-                                {
-                                    props.logs.filter(
-                                        (log: any) =>
-                                            log.variant === "diaperchange",
-                                    ).length
-                                }
+                                {props.logs.filter(isDiaperChangeLog).length}
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
                 {sortedLogs.map((log: any) => (
-                    <LogCard
-                        key={log.id}
-                        log={log}
-                        baby={props.baby}
-                    />
+                    <LogCard key={log.id} log={log} baby={props.baby} />
                 ))}
             </div>
         </div>

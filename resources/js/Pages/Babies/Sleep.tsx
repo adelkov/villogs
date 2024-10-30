@@ -4,6 +4,7 @@ import LogCard from "@/Pages/Babies/LogCard";
 import {SleepLog} from "@/types/Log";
 
 function Sleep(props: any) {
+    console.log(props)
     return (
         <div className={"flex flex-col gap-2 max-w-screen-sm mx-auto p-2"}>
             <h1 className={"text-4xl mb-3"}>Sleep Logs</h1>

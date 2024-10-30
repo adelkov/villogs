@@ -53,6 +53,11 @@ class SleepLogController extends Controller
      */
     public function update(Request $request, SleepLog $sleepLog)
     {
+
+        $sleepLog->Log->update([
+            'started_at' =>  $request->started_at,
+            'ended_at' => $request->ended_at,
+        ]);
         $sleepLog->update([
             'started_at' => $request->started_at,
             'ended_at' => $request->ended_at,

@@ -36,7 +36,6 @@ class DatabaseSeeder extends Seeder
         $reka->babies()->attach($babies->pluck('id')->toArray());
         $adel->babies()->attach($babies->pluck('id')->toArray());
 
-
         SleepLog::factory()->count(10)->create([
             'baby_id' => $babies->first()->id,
             'started_at' => now()->subHours(2),

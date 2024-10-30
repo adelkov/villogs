@@ -13,8 +13,6 @@ export type BreastfeedLog = BaseLog & {
     loggable_type: "App\\Models\\BreastFeedLog"
     loggable: {
         side: "left" | "right";
-        started_at: string;
-        ended_at: string;
     }
 };
 
@@ -27,7 +25,6 @@ export type DiaperChangeLog = BaseLog & {
     loggable_type: "App\\Models\\DiaperChangeLog";
     loggable: {
         type: "pee" | "poop" | "both" | "empty";
-        started_at: string;
     }
 };
 
@@ -39,8 +36,7 @@ export function isDiaperChangeLog(log: Log): log is DiaperChangeLog {
 export type SleepLog = BaseLog & {
     loggable_type: "App\\Models\\SleepLog"
     loggable: {
-        started_at: string;
-        ended_at: string;
+
     }
 };
 

@@ -29,14 +29,13 @@ export function formatToLocalTime(isoDate: string) {
 }
 
 export function displayLogTime(log: Log) {
-    console.log(log)
     if (!log) return "";
     if (!isLongRunningLog(log)) {
-        return format(new Date(log.loggable.started_at), "E. HH:mm");
+        return format(new Date(log.started_at), "E. HH:mm");
     }
-    const startedAt = new Date(log.loggable.started_at);
-    const endedAt = log.loggable.ended_at
-        ? new Date(log.loggable.ended_at)
+    const startedAt = new Date(log.started_at);
+    const endedAt = log.ended_at
+        ? new Date(log.ended_at)
         : new Date();
 
     const duration = intervalToDuration({ start: startedAt, end: endedAt });
@@ -51,9 +50,9 @@ export function displayLongRunningLogDuration(log: Log) {
     if (!isLongRunningLog(log)) {
         return "";
     }
-    const startedAt = new Date(log.loggable.started_at);
-    const endedAt = log.loggable.ended_at
-        ? new Date(log.loggable.ended_at)
+    const startedAt = new Date(log.started_at);
+    const endedAt = log.ended_at
+        ? new Date(log.ended_at)
         : new Date();
 
     const duration = intervalToDuration({ start: startedAt, end: endedAt });
@@ -66,9 +65,9 @@ export function displayLongRunningLogDuration(log: Log) {
 
 export function getMinutesSlept(logs: SleepLog[]) {
     return logs.reduce((acc: number, log: SleepLog) => {
-        const start = max([startOfToday(), new Date(log.loggable.started_at)]);
-        const end = log.loggable.ended_at
-            ? new Date(log.loggable.ended_at)
+        const start = max([startOfToday(), new Date(log.started_at)]);
+        const end = log.ended_at
+            ? new Date(log.ended_at)
             : new Date();
         acc += differenceInMinutes(end, start);
         return acc;

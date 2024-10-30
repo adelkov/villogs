@@ -48,6 +48,7 @@ class BabyController extends Controller
             'baby_id' => $baby->id,
             'loggable_id' => $sleepLog->id,
             'loggable_type' => 'App\Models\SleepLog',
+            'started_at' => now()->toISOString(),
         ]);
 
 
@@ -61,6 +62,7 @@ class BabyController extends Controller
 
         foreach ($sleepLogs as $sleepLog) {
             $sleepLog->ended_at = now()->toISOString();
+            $sleepLog->log->ended_at = now()->toISOString();
             $sleepLog->save();
         }
 
@@ -124,6 +126,6 @@ class BabyController extends Controller
         $loggable->delete();
         $log->delete();
 
-        return redirect()->back()->with('success', 'Baby deleted successfully.');
+        return redirect()->back()->with('success', 'Log deleted successfully.');
     }
 }

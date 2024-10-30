@@ -17,7 +17,7 @@ function SleepTrack({ baby, status }: Props) {
     const { props } = usePage<any>();
 
     const runningSleepLog = props.logs.find(
-        (log: Log) => isSleepLog(log) && !log.loggable.ended_at,
+        (log: Log) => isSleepLog(log) && !log.ended_at,
     );
     const [duration, setDuration] = useState<string>(
         runningSleepLog ? displayLongRunningLogDuration(runningSleepLog) : "",

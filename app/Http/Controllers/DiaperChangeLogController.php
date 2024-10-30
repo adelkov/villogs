@@ -53,8 +53,10 @@ class DiaperChangeLogController extends Controller
     public function update(Request $request, DiaperChangeLog $diaperChangeLog)
     {
         $diaperChangeLog->update([
-            'started_at' => $request->started_at,
             'type' => $request->type,
+        ]);
+        $diaperChangeLog->Log->update([
+            'started_at' => $request->started_at,
         ]);
         return redirect()->back()->with('success', 'Log(s) updated successfully.');
     }

@@ -12,7 +12,11 @@ type Props = {
 };
 
 function BreastFeedLogEditor({ log, onClose }: Props) {
-    const { put, setData, data, processing } = useForm(log.loggable);
+    const { put, setData, data, processing } = useForm({
+        started_at: log.started_at,
+        ended_at: log.ended_at,
+        side: log.loggable.side
+    });
 
     const onSubmitBreastFeedLog = (e: any) => {
         e.preventDefault();

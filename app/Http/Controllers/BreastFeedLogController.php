@@ -52,11 +52,15 @@ class BreastFeedLogController extends Controller
      */
     public function update(Request $request, BreastFeedLog $breastFeedLog)
     {
+        dump($request->all());
         $breastFeedLog->update([
-            'started_at' => $request->started_at,
-            'ended_at' => $request->ended_at,
             'side' => $request->side,
         ]);
+        $breastFeedLog->Log->update([
+            'started_at' => $request->started_at,
+            'ended_at' => $request->ended_at,
+        ]);
+
         return redirect()->back()->with('success', 'Log(s) updated successfully.');
     }
 

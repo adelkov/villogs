@@ -35,9 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/babies/{baby}/sleeping', function (
         \App\Models\Baby $baby
     ) {
-
-        $sleepLogs = \App\Models\SleepLog::where('baby_id', $baby->id)
-            ->orderByDesc('started_at')
+        $sleepLogs = $baby->logs()->where(
+            'loggable_type',
+            \App\Models\SleepLog::class
+        )->with('loggable')
+            ->whereHas('loggable')
             ->get();
         return Inertia::render('Babies/Sleep', [
             'baby' => $baby,
@@ -48,24 +50,30 @@ Route::middleware('auth')->group(function () {
     Route::get('/babies/{baby}/breastfeeding', function (
         \App\Models\Baby $baby
     ) {
-        $breastFeedLogs = \App\Models\BreastFeedLog::where('baby_id', $baby->id)
-            ->orderByDesc('started_at')
-            ->get();
+
         return Inertia::render('Babies/BreastFeed', [
             'baby' => $baby,
-            'logs' => $breastFeedLogs,
+            'logs' => $baby->logs()->where(
+                'loggable_type',
+                \App\Models\BreastFeedLog::class
+            )->with('loggable')
+                ->whereHas('loggable')
+                ->get()
         ]);
     })->name('babies.breastfeed');
     // diaper change
     Route::get('/babies/{baby}/diaperchanges', function (
         \App\Models\Baby $baby
     ) {
-        $diaperChangeLogs = \App\Models\DiaperChangeLog::where('baby_id', $baby->id)
-            ->orderByDesc('started_at')
-            ->get();
+
         return Inertia::render('Babies/DiaperChange', [
             'baby' => $baby,
-            'logs' => $diaperChangeLogs,
+            'logs' => $baby->logs()->where(
+                'loggable_type',
+                \App\Models\DiaperChangeLog::class
+            )->with('loggable')
+                ->whereHas('loggable')
+                ->get()
         ]);
     })->name('babies.diaperchanges');
 

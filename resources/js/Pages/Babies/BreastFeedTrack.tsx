@@ -25,7 +25,7 @@ function BreastFeedTrack({ baby, status }: Props) {
     const { props } = usePage<any>();
 
     const runningBreastFeedLog = props.logs.find(
-        (log: Log) => isBreastfeedLog(log) && !log.loggable.ended_at,
+        (log: Log) => isBreastfeedLog(log) && !log.ended_at,
     );
     const [duration, setDuration] = useState<string>(
         runningBreastFeedLog
