@@ -5,6 +5,8 @@ type BaseLog = {
     created_at: string;
     updated_at: string;
     loggable_id: number;
+    started_at: string;
+    ended_at: string | null;
 };
 
 export type BreastfeedLog = BaseLog & {
