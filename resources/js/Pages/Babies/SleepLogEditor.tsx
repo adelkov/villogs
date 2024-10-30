@@ -10,7 +10,10 @@ type Props = {
 };
 
 function SleepLogEditor({ log, onClose }: Props) {
-    const { put, setData, data, processing } = useForm(log.loggable);
+    const { put, setData, data, processing } = useForm({
+        started_at: log.started_at,
+        ended_at: log.ended_at,
+    });
 
     const onSubmitLog = (e: any) => {
         e.preventDefault();
