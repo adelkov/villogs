@@ -12,7 +12,10 @@ type Props = {
 };
 
 function DiaperChangeLogEditor({ log, onClose }: Props) {
-    const { put, setData, data, processing } = useForm(log.loggable);
+    const { put, setData, data, processing } = useForm({
+        started_at: log.started_at,
+        type: log.loggable.type,
+    });
 
     const onSubmitBreastFeedLog = (e: any) => {
         e.preventDefault();
