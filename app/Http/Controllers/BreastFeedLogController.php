@@ -52,7 +52,6 @@ class BreastFeedLogController extends Controller
      */
     public function update(Request $request, BreastFeedLog $breastFeedLog)
     {
-        dump($request->all());
         $breastFeedLog->update([
             'side' => $request->side,
         ]);
