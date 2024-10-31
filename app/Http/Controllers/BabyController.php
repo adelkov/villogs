@@ -62,7 +62,9 @@ class BabyController extends Controller
 
         foreach ($sleepLogs as $sleepLog) {
             $sleepLog->ended_at = now()->toISOString();
-            $sleepLog->log->ended_at = now()->toISOString();
+            $sleepLog->log()->update([
+                'ended_at' => now(),
+            ]);
             $sleepLog->save();
         }
 
@@ -82,6 +84,7 @@ class BabyController extends Controller
             'baby_id' => $baby->id,
             'loggable_id' => $breastFeedLog->id,
             'loggable_type' => 'App\Models\BreastFeedLog',
+            'started_at' => now(),
         ]);
 
         return redirect()->back()->with('success', 'Log added successfully.');
@@ -94,6 +97,9 @@ class BabyController extends Controller
 
         foreach ($breastFeedLogs as $breastFeedLog) {
             $breastFeedLog->ended_at = now()->toISOString();
+            $breastFeedLog->log()->update([
+                'ended_at' => now(),
+            ]);
             $breastFeedLog->save();
         }
 
@@ -113,6 +119,7 @@ class BabyController extends Controller
             'baby_id' => $baby->id,
             'loggable_id' => $diaperChangeLog->id,
             'loggable_type' => 'App\Models\DiaperChangeLog',
+            'started_at' => now(),
         ]);
 
 
