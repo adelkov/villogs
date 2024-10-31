@@ -16,10 +16,18 @@ import Log, {
 } from "@/types/Log";
 import Baby from "@/types/Baby";
 
-type Props = {
+export type Props = {
     baby: Baby;
     status: string;
+    auth: any;
     logs: Log[];
+    timeline: Record<
+        string,
+        (Log & {
+            fromStartOfDay: number;
+            fromStartOfLog: number | null;
+        })[]
+    >;
 };
 
 function ShowBaby(props: Props) {
@@ -101,6 +109,7 @@ function ShowBaby(props: Props) {
                         )}
                     </div>
                 </AnimatePresence>
+
                 <table className={"w-full [&>tr>td]:p-4"}>
                     <tbody>
                         <tr>

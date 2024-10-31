@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Babies/Show', [
             'baby' => $baby,
             'status' => $baby->status(),
+            'timeline' => \App\Services\TimelineService::transformLogsToTimeline($baby->logs()->get()),
             // all the logs merged into one field, add type to all and sort by started_at
             'logs' => $baby->logs()
                 ->with('loggable')
@@ -119,6 +120,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/babies/{baby}/logs/breastfeed', [\App\Http\Controllers\BabyController::class, 'endBreastFeed'])->name('babies.logs.add.breastfeed.end');
     Route::post('/babies/{baby}/logs/diaperchange', [\App\Http\Controllers\BabyController::class, 'addDiaperChangeLog'])->name('babies.logs.add.diaperchange');
     Route::delete('/babies/{baby}/logs', [\App\Http\Controllers\BabyController::class, 'deleteLog'])->name('babies.logs.delete');
+    Route::delete('/logs/{id}', function ($id) {
+        $log = \App\Models\Log::find($id);
+        $log->loggable->delete();
+        $log->delete();
+        return redirect()->back();
+    })->name('logs.delete');
 
     Route::resource('breastFeedLogs', \App\Http\Controllers\BreastFeedLogController::class);
     Route::resource('diaperChangeLogs', \App\Http\Controllers\DiaperChangeLogController::class);

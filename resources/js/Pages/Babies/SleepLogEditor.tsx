@@ -10,10 +10,27 @@ type Props = {
 };
 
 function SleepLogEditor({ log, onClose }: Props) {
-    const { put, setData, data, processing } = useForm({
+    const {
+        put,
+        setData,
+        data,
+        processing,
+        reset,
+        delete: deleteItem,
+    } = useForm({
         started_at: log.started_at,
         ended_at: log.ended_at,
     });
+
+    const deleteLog = (e: any, id: number) => {
+        e.preventDefault();
+        deleteItem(
+            route("logs.delete", {
+                id,
+            }),
+            { onSuccess: () => reset() },
+        );
+    };
 
     const onSubmitLog = (e: any) => {
         e.preventDefault();
@@ -65,6 +82,14 @@ function SleepLogEditor({ log, onClose }: Props) {
 
             <Button disabled={processing} type="submit">
                 Save
+            </Button>
+            <Button
+                onClick={(e) => deleteLog(e, log.id)}
+                variant={"destructive"}
+                disabled={processing}
+                type="button"
+            >
+                Delete
             </Button>
         </form>
     );

@@ -12,8 +12,10 @@ class TimelineService
     public static function minutesPassedFromStartOfDay($date)
     {
         $fromStartInMinutes = $date
+            ->copy()
             ->startOfDay()
             ->diffInMinutes($date);
+
         $fromStartInPercentage = ($fromStartInMinutes / 1440) * 100;
         return $fromStartInPercentage;
     }
@@ -34,24 +36,20 @@ class TimelineService
         // Loop through each log
         foreach ($logs as $log) {
             // Calculate the percentage of the day that has passed since the log started
-            $fromStartInPercentage = TimelineService::minutesPassedFromStartOfDay($log->started_at);
+            $minutesPassedFromStartOfDay = TimelineService::minutesPassedFromStartOfDay($log->started_at);
             // Calculate the percentage of the day that has passed since the log ended
-            $fromEndInPercentage = TimelineService::minutesDifference($log->started_at, $log->ended_at);
+            $minutesDifference = $log->ended_at ? TimelineService::minutesDifference($log->started_at, $log->ended_at) : null;
 
             // Add the log to the adjusted logs collection
             $adjustedLogs->push([
-                'log' => $log,
-                'fromStartInPercentage' => $fromStartInPercentage,
-                'fromEndInPercentage' => $fromEndInPercentage,
+                // spread the data
+                ...$log->toArray(),
+                'fromStartOfDay' => $minutesPassedFromStartOfDay,
+                'fromStartOfLog' => $minutesDifference,
+                'started_at_day' => $log->started_at->format('Y-m-d'),
             ]);
         }
 
-
-        // Group logs by date
-        $groupedLogs = $adjustedLogs->groupBy(function ($log) {
-            return $log->started_at->format('Y-m-d');
-        });
-
-        return $groupedLogs;
+        return $adjustedLogs->groupBy('started_at_day');
     }
 }

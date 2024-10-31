@@ -12,11 +12,27 @@ type Props = {
 };
 
 function DiaperChangeLogEditor({ log, onClose }: Props) {
-    const { put, setData, data, processing } = useForm({
+    const {
+        put,
+        setData,
+        data,
+        processing,
+        delete: deleteItem,
+        reset,
+    } = useForm({
         started_at: log.started_at,
         type: log.loggable.type,
     });
 
+    const deleteLog = (e: any, id: number) => {
+        e.preventDefault();
+        deleteItem(
+            route("logs.delete", {
+                id,
+            }),
+            { onSuccess: () => reset() },
+        );
+    };
     const onSubmitBreastFeedLog = (e: any) => {
         e.preventDefault();
         put(
@@ -74,6 +90,14 @@ function DiaperChangeLogEditor({ log, onClose }: Props) {
 
             <Button disabled={processing} type="submit">
                 Save
+            </Button>
+            <Button
+                onClick={(e) => deleteLog(e, log.id)}
+                variant={"destructive"}
+                disabled={processing}
+                type="button"
+            >
+                Delete
             </Button>
         </form>
     );

@@ -12,11 +12,28 @@ type Props = {
 };
 
 function BreastFeedLogEditor({ log, onClose }: Props) {
-    const { put, setData, data, processing } = useForm({
+    const {
+        put,
+        setData,
+        data,
+        processing,
+        delete: deleteItem,
+        reset,
+    } = useForm({
         started_at: log.started_at,
         ended_at: log.ended_at,
-        side: log.loggable.side
+        side: log.loggable.side,
     });
+
+    const deleteLog = (e: any, id: number) => {
+        e.preventDefault();
+        deleteItem(
+            route("logs.delete", {
+                id,
+            }),
+            { onSuccess: () => reset() },
+        );
+    };
 
     const onSubmitBreastFeedLog = (e: any) => {
         e.preventDefault();
@@ -87,6 +104,11 @@ function BreastFeedLogEditor({ log, onClose }: Props) {
 
             <Button disabled={processing} type="submit">
                 Save
+            </Button>
+            <Button
+                onClick={(e) => deleteLog(e, log.id)}
+                variant={"destructive"} disabled={processing} type="button">
+                Delete
             </Button>
         </form>
     );

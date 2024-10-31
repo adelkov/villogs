@@ -125,14 +125,4 @@ class BabyController extends Controller
 
         return redirect()->back()->with('success', 'Log added successfully.');
     }
-
-    public function deleteLog(Request $request, \App\Models\Baby $baby)
-    {
-        $log = Log::find($request->id);
-        $loggable = $log->loggable_type::find($log->loggable_id);
-        $loggable->delete();
-        $log->delete();
-
-        return redirect()->back()->with('success', 'Log deleted successfully.');
-    }
 }

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Milk, MilkOff } from "lucide-react";
-import Log, { isBreastfeedLog, isSleepLog } from "@/types/Log";
+import Log, { isBreastfeedLog } from "@/types/Log";
 import { useState } from "react";
 import { displayLongRunningLogDuration } from "@/lib/utils";
 import { useInterval } from "usehooks-ts";
@@ -43,6 +43,7 @@ function BreastFeedTrack({ baby, status }: Props) {
         post,
         reset,
         delete: endLog,
+        processing
     } = useForm({
         message: "",
     });
@@ -89,11 +90,13 @@ function BreastFeedTrack({ baby, status }: Props) {
                         <DropdownMenuLabel>Which breast?</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
+                            disabled={processing}
                             onClick={(e) => addBreastFeed(e, "right")}
                         >
                             Right
                         </DropdownMenuItem>
                         <DropdownMenuItem
+                            disabled={processing}
                             onClick={(e) => addBreastFeed(e, "left")}
                         >
                             Left
@@ -101,9 +104,14 @@ function BreastFeedTrack({ baby, status }: Props) {
                     </DropdownMenuContent>
                 </DropdownMenu>
             ) : (
-                <TrackActionButton onClick={endBreastFeeding}>
+                <TrackActionButton
+                    disabled={processing}
+                    onClick={endBreastFeeding}>
                     <MilkOff className={"animate-pulse h-8 w-8"} />
-                    <span className={"animate-pulse"}>{duration || displayLongRunningLogDuration(runningBreastFeedLog)}</span>
+                    <span className={"animate-pulse font-mono"}>
+                        {duration ||
+                            displayLongRunningLogDuration(runningBreastFeedLog)}
+                    </span>
                 </TrackActionButton>
             )}
         </>
