@@ -23,7 +23,6 @@ type Props = {
 };
 
 function ShowBaby(props: Props) {
-    console.log(props);
     const showBreastFeed = ["awake", "breastfeeding"].includes(props.status);
     const showSleeping = ["awake", "sleeping"].includes(props.status);
 
@@ -122,9 +121,7 @@ function ShowBaby(props: Props) {
                                     {" "}
                                     {lastBreastFeed?.loggable.side} side (
                                     {format(
-                                        new Date(
-                                            lastBreastFeed?.started_at,
-                                        ),
+                                        new Date(lastBreastFeed?.started_at),
                                         "HH:mm",
                                     )}
                                     )

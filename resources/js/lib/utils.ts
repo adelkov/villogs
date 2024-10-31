@@ -2,10 +2,10 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import Log, { isLongRunningLog, SleepLog } from "@/types/Log";
 import {
-    differenceInMinutes,
+    differenceInMinutes, endOfDay,
     format,
     intervalToDuration,
-    max,
+    max, startOfDay,
     startOfToday,
 } from "date-fns";
 
