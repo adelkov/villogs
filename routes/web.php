@@ -24,7 +24,7 @@ Route::get('/', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('welcome');
 
-Route::post('/babies', [\App\Http\Controllers\BabyController::class, 'store'])->name('babies.store');
+
 
 
 Route::middleware('auth')->group(function () {
@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::post('/babies', [\App\Http\Controllers\BabyController::class, 'store'])->name('babies.store');
     Route::get('/babies/{baby}/sleeping', function (
         \App\Models\Baby $baby
     ) {
@@ -89,26 +90,8 @@ Route::middleware('auth')->group(function () {
             // all the logs merged into one field, add type to all and sort by started_at
             'logs' => $baby->logs()
                 ->with('loggable')
-                ->where(function ($query) use ($today) {
-                    $query->whereHasMorph(
-                        'loggable',
-                        [App\Models\BreastFeedLog::class, App\Models\SleepLog::class],
-                        function ($query) use ($today) {
-                            $query->whereDate('started_at', $today)
-                                ->orWhere(function ($query) use ($today) {
-                                    $query->whereNotNull('ended_at')
-                                        ->whereDate('ended_at', $today);
-                                });
-                        }
-                    )->orWhereHasMorph(
-                        'loggable',
-                        [App\Models\DiaperChangeLog::class],
-                        function ($query) use ($today) {
-                            $query->whereDate('started_at', $today);
-                            // No need to check for ended_at since this model doesn't have it
-                        }
-                    );
-                })
+                ->where('started_at', '>=', $today)
+                ->orWhere('ended_at', '>=', $today)
                 ->orderBy('created_at', 'desc')
                 ->get()->toArray(),
         ]);
