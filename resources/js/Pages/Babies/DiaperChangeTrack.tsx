@@ -8,9 +8,10 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Shirt } from "lucide-react";
+import Baby from "@/types/Baby";
 
 type Props = {
-    baby: any;
+    baby: Baby;
 };
 
 function DiaperChangeTrack({ baby }: Props) {

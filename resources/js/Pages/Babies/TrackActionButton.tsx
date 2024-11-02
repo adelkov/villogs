@@ -9,7 +9,7 @@ const TrackActionButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         return (
             <Button
                 {...props}
-                className={cn(props.className, "p-10 whitespace-pre-wrap md:text-1xl flex flex-col gap-2 font-bold")}
+                className={cn(props.className, "p-10 whitespace-pre-wrap md:text-1xl flex flex-col gap-2 font-bold rounded-3xl")}
                 key={id}
                 ref={ref}
                 initial={{

@@ -47,7 +47,7 @@ function ShowBaby(props: Props) {
     const lastBreastFeed = sortedLogs.find(isBreastfeedLog);
 
     return (
-        <div className={" bg-blue-300 min-h-screen text-slate-800"}>
+        <div className={" bg-slate-800 min-h-screen text-slate-50"}>
             <Head>
                 <title>Villogs</title>
                 <meta
@@ -58,7 +58,7 @@ function ShowBaby(props: Props) {
                 <link rel="icon" type="image/svg+xml" href="/favicon.png" />
             </Head>
 
-            <div className={"max-w-screen-sm mx-auto p-2 md:p-10 space-y-2.5"}>
+            <div className={"max-w-screen-sm mx-auto p-2 md:p-10 space-y-3"}>
                 <h1 className={"text-6xl font-bold"}>
                     {props.baby.name}
                     <span className={"font-bold text-xl"}>
@@ -113,7 +113,7 @@ function ShowBaby(props: Props) {
                 <table className={"w-full [&>tr>td]:p-4"}>
                     <tbody>
                         <tr>
-                            <td className={"text-slate-600"}>
+                            <td className={"text-slate-400"}>
                                 Hours slept today:{" "}
                             </td>
                             <td className={"font-bold text-right"}>
@@ -122,7 +122,7 @@ function ShowBaby(props: Props) {
                             </td>
                         </tr>
                         <tr>
-                            <td className={"text-slate-600"}>
+                            <td className={"text-slate-400"}>
                                 Last breast feed:
                             </td>
                             {lastBreastFeed && (
@@ -138,7 +138,7 @@ function ShowBaby(props: Props) {
                             )}
                         </tr>
                         <tr>
-                            <td className={"text-slate-600"}>
+                            <td className={"text-slate-400"}>
                                 Diaper changes:
                             </td>
                             <td className={"font-bold text-right"}>

@@ -1,5 +1,5 @@
 import { useForm } from "@inertiajs/react";
-import { Bed, Delete, Milk, Moon, Shirt } from "lucide-react";
+import {Bed, Delete, Droplet, Ghost, Milk, Moon, Package, Shirt} from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
@@ -20,7 +20,7 @@ import Log, {
 import BreastFeedLogEditor from "@/Pages/Babies/BreastFeedLogEditor";
 import SleepLogEditor from "@/Pages/Babies/SleepLogEditor";
 import DiaperChangeLogEditor from "@/Pages/Babies/DiaperChangeLogEditor";
-import { displayLogTime, displayLongRunningLogDuration } from "@/lib/utils";
+import { cn, displayLogTime, displayLongRunningLogDuration } from "@/lib/utils";
 import Baby from "@/types/Baby";
 import { Badge } from "@/components/ui/badge";
 
@@ -91,11 +91,24 @@ function LogCard({ log, baby }: Props) {
         >
             <DialogTrigger asChild>
                 <div
-                    className={
-                        "border bg-gradient-to-br from-white/20 to-white/60 flex items-center gap-4 shadow-2xl p-3 rounded-tr-3xl"
-                    }
+                    className={cn(
+                        "text-slate-800 bg-gradient-to-br from-white/20 to-white/60 flex items-center gap-4 shadow-2xl p-3 rounded-3xl",
+                        {
+                            "bg-pink-300": isBreastfeedLog(log),
+                            "bg-yellow-300": isDiaperChangeLog(log),
+                            "bg-blue-300": isSleepLog(log),
+                        },
+                    )}
                 >
-                    {icon[log.loggable_type]}
+                    <div
+                        className={cn("", {
+                            "text-pink-600": isBreastfeedLog(log),
+                            "text-yellow-600": isDiaperChangeLog(log),
+                            "text-blue-600": isSleepLog(log),
+                        })}
+                    >
+                        {icon[log.loggable_type]}
+                    </div>
                     <div>
                         <h2
                             className={
@@ -135,21 +148,30 @@ function LogCard({ log, baby }: Props) {
                                 <Milk className={"w-3 h-3"} />
                             )}
                             {isDiaperChangeLog(log) && (
-                                <Shirt className={"w-3 h-3"} />
+                                <>
+                                    {log.loggable.type === "pee" && (
+                                        <Droplet className={"w-3 h-3"} />
+                                    )}
+                                    {log.loggable.type === "poop" && (
+                                        <Package className={"w-3 h-3"} />
+                                    )}
+                                    {log.loggable.type === "both" && (
+                                        <>
+                                            <Droplet className={"w-3 h-3"} />
+                                            <Package className={"w-3 h-3"} />
+                                        </>
+                                    )}
+                                    {
+                                        log.loggable.type === 'empty' && (
+                                            <Ghost className={"w-3 h-3"} />
+                                        )
+                                    }
+                                </>
                             )}
 
                             {duration}
                         </Badge>
                     </div>
-
-                    {/*<Button*/}
-                    {/*    variant={"ghost"}*/}
-                    {/*    size={"icon"}*/}
-                    {/*    onClick={(e) => deleteLog(e, log.id)}*/}
-                    {/*    className={"ml-auto"}*/}
-                    {/*>*/}
-                    {/*    <Delete />*/}
-                    {/*</Button>*/}
                 </div>
             </DialogTrigger>
             <DialogContent>

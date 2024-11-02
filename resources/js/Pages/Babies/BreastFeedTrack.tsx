@@ -15,9 +15,10 @@ import Log, { isBreastfeedLog } from "@/types/Log";
 import { useState } from "react";
 import { displayLongRunningLogDuration } from "@/lib/utils";
 import { useInterval } from "usehooks-ts";
+import Baby from "@/types/Baby";
 
 type Props = {
-    baby: any;
+    baby: Baby;
     status: string;
 };
 
