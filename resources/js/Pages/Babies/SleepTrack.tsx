@@ -61,8 +61,7 @@ function SleepTrack({ baby, status }: Props) {
                 </TrackActionButton>
             ) : (
                 <TrackActionButton disabled={!isSleeping} onClick={endSleep}>
-                    <AlarmClock className={"h-8 w-8 animate-pulse"} />
-                    <span className={"animate-pulse font-mono"}>
+                    <span className={"animate-pulse font-mono text-2xl"}>
                         {duration ||
                             displayLongRunningLogDuration(runningSleepLog) ||
                             "00:00:00"}

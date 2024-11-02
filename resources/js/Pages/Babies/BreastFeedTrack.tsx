@@ -109,8 +109,7 @@ function BreastFeedTrack({ baby, status }: Props) {
                     variant={"pink"}
                     disabled={processing}
                     onClick={endBreastFeeding}>
-                    <MilkOff className={"animate-pulse h-8 w-8"} />
-                    <span className={"animate-pulse font-mono"}>
+                    <span className={"animate-pulse font-mono text-2xl"}>
                         {duration ||
                             displayLongRunningLogDuration(runningBreastFeedLog)}
                     </span>
