@@ -81,7 +81,7 @@ function BreastFeedTrack({ baby, status }: Props) {
             {status !== "breastfeeding" ? (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <TrackActionButton>
+                        <TrackActionButton variant={'pink'}>
                             <Milk className={"h-8 w-8"} />
                             Breastfeed
                         </TrackActionButton>
@@ -105,6 +105,7 @@ function BreastFeedTrack({ baby, status }: Props) {
                 </DropdownMenu>
             ) : (
                 <TrackActionButton
+                    variant={"pink"}
                     disabled={processing}
                     onClick={endBreastFeeding}>
                     <MilkOff className={"animate-pulse h-8 w-8"} />

@@ -32,7 +32,7 @@ function DiaperChangeTrack({ baby }: Props) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <TrackActionButton>
+                <TrackActionButton variant={'yellow'}>
                     <Shirt />
                     Diaper
                 </TrackActionButton>
