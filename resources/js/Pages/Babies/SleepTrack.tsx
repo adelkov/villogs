@@ -30,7 +30,7 @@ function SleepTrack({ baby, status }: Props) {
         runningSleepLog ? 1000 : null,
     );
 
-    const { post, reset } = useForm({
+    const { post, reset, processing } = useForm({
         message: "",
     });
     const startSleep = (e: any) => {
@@ -55,12 +55,12 @@ function SleepTrack({ baby, status }: Props) {
     return (
         <>
             {!isSleeping ? (
-                <TrackActionButton disabled={isSleeping} onClick={startSleep}>
+                <TrackActionButton disabled={isSleeping || processing} onClick={startSleep}>
                     <Bed className={"h-8 w-8"} />
                     <span>Sleep</span>
                 </TrackActionButton>
             ) : (
-                <TrackActionButton disabled={!isSleeping} onClick={endSleep}>
+                <TrackActionButton disabled={!isSleeping || processing} onClick={endSleep}>
                     <span className={"animate-pulse font-mono text-2xl"}>
                         {duration ||
                             displayLongRunningLogDuration(runningSleepLog) ||
