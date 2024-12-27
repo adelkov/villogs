@@ -93,7 +93,14 @@ Route::middleware('auth')->group(function () {
                 ->with('loggable')
                 ->where('started_at', '>=', $today)
                 ->orWhere('ended_at', '>=', $today)
-                ->orWhereNull('ended_at')
+                // where has not ended yet and is sleep or breastfeeding
+                ->where(function ($query) {
+                    $query->where('ended_at', null)
+                        ->where(function ($query) {
+                            $query->where('loggable_type', \App\Models\SleepLog::class)
+                                ->orWhere('loggable_type', \App\Models\BreastFeedLog::class);
+                        });
+                })
                 ->orderBy('created_at', 'desc')
                 ->get()->toArray(),
         ]);
