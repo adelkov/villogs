@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
             \App\Models\SleepLog::class
         )->with('loggable')
             ->whereHas('loggable')
-            ->orderBy('created_at', 'asc')
+            ->orderBy('started_at', 'desc')
             ->get();
         return Inertia::render('Babies/Sleep', [
             'baby' => $baby,
