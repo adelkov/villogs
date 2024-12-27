@@ -93,6 +93,7 @@ Route::middleware('auth')->group(function () {
                 ->with('loggable')
                 ->where('started_at', '>=', $today)
                 ->orWhere('ended_at', '>=', $today)
+                ->orWhereNull('ended_at')
                 ->orderBy('created_at', 'desc')
                 ->get()->toArray(),
         ]);
