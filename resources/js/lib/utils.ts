@@ -52,6 +52,18 @@ export function displayLongRunningLogDuration(log: Log) {
     return `${hours}:${minutes}:${seconds}`;
 }
 
+export function displayTimeSinceEnded(log: Log) {
+    if (!log) return "";
+    const endedAt = log.ended_at ? new Date(log.ended_at) : new Date();
+
+    const duration = intervalToDuration({ start: endedAt, end: new Date() });
+    const hours = duration.hours?.toString().padStart(2, "0") || "00";
+    const minutes = duration.minutes?.toString().padStart(2, "0") || "00";
+    const seconds = duration.seconds?.toString().padStart(2, "0") || "00";
+
+    return `${hours}:${minutes}:${seconds}`;
+}
+
 export function getMinutesSlept(logs: SleepLog[]) {
     return logs.reduce((acc: number, log: SleepLog) => {
         const start = max([startOfToday(), new Date(log.started_at)]);
