@@ -89,21 +89,23 @@ Route::middleware('auth')->group(function () {
             'baby' => $baby,
             'status' => $baby->status(),
             'timeline' => \App\Services\TimelineService::transformLogsToTimeline($baby->logs()->get()),
-            // all the logs merged into one field, add type to all and sort by started_at
             'logs' => $baby->logs()
                 ->with('loggable')
-                ->where('started_at', '>=', $today)
-                ->orWhere('ended_at', '>=', $today)
-                // where has not ended yet and is sleep or breastfeeding
-                ->where(function ($query) {
-                    $query->where('ended_at', null)
+                ->where(function ($query) use ($today) {
+                    $query->where('started_at', '>=', $today)
+                        ->orWhere('ended_at', '>=', $today);
+                })
+                ->orWhere(function ($query) {
+                    $query->whereNull('ended_at')
                         ->where(function ($query) {
                             $query->where('loggable_type', \App\Models\SleepLog::class)
                                 ->orWhere('loggable_type', \App\Models\BreastFeedLog::class);
                         });
                 })
-                ->orderBy('created_at', 'desc')
-                ->get()->toArray(),
+
+                ->orderBy('started_at', 'asc') // Sort by start date for timeline
+                ->get()
+                ->toArray(),
         ]);
     })->name('babies.show');
 
