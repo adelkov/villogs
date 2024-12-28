@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
                 \App\Models\BreastFeedLog::class
             )->with('loggable')
                 ->whereHas('loggable')
+                ->orderBy('started_at', 'desc')
                 ->get()
         ]);
     })->name('babies.breastfeed');
